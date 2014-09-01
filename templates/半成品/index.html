@@ -1,0 +1,72 @@
+{% extends "basic.html" %}
+{% block content %}
+<script>
+$(document).ready(function(){
+var ipts = document.getElementsByTagName("INPUT");
+var is = document.GetElementTags("i");
+var a;
+var b;
+var r;
+var id
+var c=0;
+for( var i = 0; i < ipts.length;i++)
+{
+    a=ipts[i].value;
+    i=i+1
+    b=ipts[i].value;
+    r=Number(a)/Number(b);
+    r=r*100;
+    r=String(r)+"%";
+    id="#"+is[c]
+    $(id).html(r);
+    c=c+1;
+}
+return true
+
+});
+
+</script>
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">项目预警表</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>剩余经费</th>
+                                                    <th>剩余经费比例</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for prof in showprof %}
+                                            <tr>
+                                                 <tr class="danger">
+                                             
+                                                 <td><a href="/search/project?id={{prof.project_id}}">{{prof.project_id}}</a></td>
+                                                 <td>{{prof.money_lef}}</td>
+                                                 <td style="color:red;">经费使用超过余额</td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% for prot in showprot %}
+                                            <tr>
+                                                <tr class="success">
+                                                 <td><a href="/search/project?id={{prot.project_id}}">{{prot.project_id}}</a></td>
+                                                 <td>{{prot.money_lef}}</td>
+                                                  <!--<input type="hidden" value="{{prot.money_lef}}"/> 
+                                                   <input type="hidden" value="{{prot.money_sum}}"/> -->
+                                                 <td><i>{{prot.money_act}}%</i></td>
+                                            </tr>
+                                            {% endfor %}
+                                            
+                                            
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

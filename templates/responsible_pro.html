@@ -1,0 +1,87 @@
+{% extends "rbase.html" %}
+{% block content %}
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+
+
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">快到期项目经费使用显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>显示</th>
+                                                    <th>结题日期</th>
+                                                    <th>预算/花费(万元)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in pro_expire_show %}
+                                                <tr>
+                                                    <td><a href="/responsible_pro_show?id={{row.project_id}}">{{row.project_id}}</a></td>
+                                                    <td><div class="progress">
+                                    	<i style="color:red;">{{row.money_act}}%</i>
+                                            <div style="width: {{row.money_act}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success">
+                                            </td>
+                                            <td>{{row.account_id}}</td>
+                                            <td>{{row.money_sum}}/{{row.money_cost}}</td>
+                                            
+                                                </tr>
+                                                
+                                                {% endfor %}
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">剩余项目经费使用显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>显示</th>
+                                                    <th>结题时间</th>
+                                                    <th>预算/花费(万元)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in pro_unexpire_show %}
+                                                <tr>
+                                                    <td><a href="/responsible_pro_show?id={{row.project_id}}">{{row.project_id}}</a></td>
+                                                    <td><div class="progress">
+                                    	<i style="color:red;">{{row.money_act}}%</i>
+                                            <div style="width: {{row.money_act}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success">
+                                            </td>
+                                            <td>{{row.account_id}}</td>
+                                            <td>{{row.money_sum}}/{{row.money_cost}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+
+</div>
+</div>
+</div>
+{% endblock %}

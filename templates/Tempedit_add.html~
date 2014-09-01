@@ -1,0 +1,39 @@
+{% extends "mbase.html" %}
+{% block content %}
+<script>
+      $(function(){
+               $("#sub").hide();//隐藏//显示
+      });
+</script>
+
+<script type="text/javascript">
+function createOrder()
+{
+coffee=document.forms[0].coffee
+txt=""
+for (i=0;i<kind_name.length;++ i)
+{
+if (kind_name[i].checked)
+{
+txt=txt + kind_name[i].value + ","
+}
+}
+document.getElementById("tempadd").value=txt
+
+$("#sub").show();
+}
+</script>
+
+{% for row in kindn %}
+<input type="checkbox" name="kind_name" value="{{row.name}}">{{row.name}}<br />
+{% endfor %}
+
+<input type="button" onclick="createOrder()" value="生成预览">
+
+ <form action="/tempedit_add/" method="post">
+<input type="text" name= "tempadd" id="tempadd"/><br />
+<p>请输入经费模版名称</p>
+<input type="text" name= "tempname" id="tempname"/><br />
+<input type="submit" id="sub" name="sub" value="生成模版">
+</form>
+{% endblock %}

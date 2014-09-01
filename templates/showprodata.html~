@@ -1,0 +1,174 @@
+{% extends "basic.html" %}
+{% block content %}
+ <div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="sec-box">
+                                
+                                <header>
+                                    <h2 class="heading">项目经费流水表</h2>
+                                </header>
+                                <div class="contents">
+                               
+                                    <div class="table-box">
+                                    	<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+                                        <table class="display table" id="example">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>名称</th>
+                                                    <th>经费种类</th>
+                                                    <th class="center">数量</th>
+                                                    <th class="center">金额</th>
+                                                    <th>经办人</th>
+                                                    <th>时间</th>
+                                                    <th>票据</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for pobj in probj %}
+                                                <tr class="gradeA">
+                                                    <td>{{pobj.proid}}</td>
+                                                    <td>{{pobj.name}}</td>
+                                                    <td>{{pobj.paykind}}</td>
+                                                    <td class="center">{{pobj.number}}</td>
+                                                    <td class="center">{{pobj.money}}</td>
+                                                    <td>{{pobj.transactor}}</td>
+                                                    <td>{{pobj.time}}</td>
+                                                    <td>{{pobj.bill_id}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+
+
+                                            </tfoot>
+                                        </table>
+                                        <script>
+                                        	var asInitVals = new Array();			
+											$(document).ready(function() {
+												var oTable = $('#example').dataTable( {
+													"oLanguage": {
+														"sSearch": "Search all columns:"
+													}
+												} );
+												
+												$("tfoot input").keyup( function () {
+													/* Filter on the column (the index) of this element */
+													oTable.fnFilter( this.value, $("tfoot input").index(this) );
+												} );
+												
+												
+												
+												/*
+												 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+												 * the footer
+												 */
+												$("tfoot input").each( function (i) {
+													asInitVals[i] = this.value;
+												} );
+												
+												$("tfoot input").focus( function () {
+													if ( this.className == "search_init" )
+													{
+														this.className = "";
+														this.value = "";
+													}
+												} );
+												
+												$("tfoot input").blur( function (i) {
+													if ( this.value == "" )
+													{
+														this.className = "search_init";
+														this.value = asInitVals[$("tfoot input").index(this)];
+													}
+												} );
+											} );
+
+                                        </script>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row End -->
+                </div>
+            </div>
+            
+             <div class="col-xs-6">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">经费使用比例图</h2>
+                                </header>
+                                <div class="contents boxpadding">
+                                    <div class="charts-box">
+                                        <div id="donutchart"></div>
+                                        {% ifequal kind '863' %}
+                                        <script>
+                                            Morris.Donut({
+                                              element: 'donutchart',
+                                              data: [
+                                                {value: {{other}}, label: '剩余经费'},
+                                                {value: {{a1}}, label: '设备费'},
+                                                {value: {{a2}}, label: '材料费'},
+                                                {value: {{a3}}, label: '测试费'},
+                                                {value: {{a4}}, label: '燃料费'},
+                                                {value: {{a5}}, label: '差旅费'},
+                                                {value: {{a6}}, label: '会议费'},
+                                                {value: {{a7}}, label: '国际合作交流费'},
+                                                {value: {{a8}}, label: '出版文献等'},
+                                                {value: {{a9}}, label: '劳务费'},
+                                                {value: {{a0}}, label: '其他费用'}
+                                              ],
+                                              formatter: function (x) { return x + "%"}
+                                            }).on('click', function(i, row){
+                                              console.log(i, row);
+                                            });
+                                        </script>
+                                        {% endifequal %}
+                                        
+                                        {% ifequal kind '自然基金' %}
+                                            <input type="hidden" id= "rest" name="rest" value={{other}}/> 
+                                            <input type="hidden" id= "device" name="device" value={{a1}}/> 
+                                            <input type="hidden" id= "data" name="data" value="{{a2}}"/> 
+                                            <input type="hidden" id= "consult" name="consult" value={{a3}}/> 
+                                            <input type="hidden" id= "print" name="print" value={{a4}}/>  
+                                            <input type="hidden" id= "trip" name="trip" value={{a5}}/> 
+                                            <input type="hidden" id= "meeting" name="meeting" value={{a6}}/> 
+                                            <input type="hidden" id= "coperation" name="coperation" value={{a7}}/> 
+                                            <input type="hidden" id= "info" name="info" value={{a8}}/> 
+                                            <input type="hidden" id= "labor" name="labor" value={{a9}}/> 
+                                            <input type="hidden" id= "other" name="other" value={{a0}}/> 
+                                                  
+                                        <script>
+                                            
+                                            
+                                            Morris.Donut({
+                                              element: 'donutchart',
+                                              data: [
+                                                {value: parseInt(document.getElementById("rest").value), label: '剩余经费'},
+                                                {value: parseInt(document.getElementById("device").value), label: '设备费'},
+                                                {value: parseInt(document.getElementById("data").value), label: '数据采集费'},
+                                                {value: parseInt(document.getElementById("consult").value), label: '专家咨询费'},
+                                                {value: parseInt(document.getElementById("print").value), label: '印刷费'},
+                                                {value: parseInt(document.getElementById("trip").value), label: '差旅费'},
+                                                {value: parseInt(document.getElementById("rest").value), label: '会议费'},
+                                                {value: parseInt(document.getElementById("meeting").value), label: '国际合作交流费'},
+                                                {value: parseInt(document.getElementById("coperation").value), label: '资料费'},
+                                                {value: parseInt(document.getElementById("info").value), label: '劳务费'},
+                                                {value: parseInt(document.getElementById("other").value), label: '其他费用'}
+                                              ],
+                                              formatter: function (x) { return x + "%"}
+                                            }).on('click', function(i, row){
+                                              console.log(i, row);
+                                            });
+                                        </script>
+                                        {% endifequal %}
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

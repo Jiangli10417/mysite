@@ -1,0 +1,221 @@
+{% extends "rbase.html" %}
+{% block content %}
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+ <div class="col-xs-12">
+                            <div class="tabs-section">
+                                <ul class="nav nav-tabs" id="myTab">
+                                    <li class="active"><a href="tabs.html#home" data-toggle="tab">项目账户信息显示</a></li>
+                                    <li><a href="tabs.html#profile" data-toggle="tab">各项经费使用</a></li>
+                                    <li><a href="tabs.html#messages" data-toggle="tab">经费流水显示</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="home">
+                                    	<section class="boxpadding">
+                                        	<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">项目账户信息显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                    <th>比例</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                            <td>项目号</td>
+                                            <td>{{pro_info.pid}}</td>
+                                            </tr>
+                                            <tr>
+                                            <td>资金卡号</td>
+                                            <td>{{account_info.account_id}}</td>
+                                            </tr>
+                                            <tr>
+                                            <td>负责人</td>
+                                            <td>{{pro_info.pManager}}</td>
+                                            </tr>
+                                            <tr>
+                                            <td>总结费</td>
+                                            <td>{{account_info.money_sum}}万元</td>
+                                            </tr>
+                                            <tr>
+                                            <td>到账经费</td>
+                                            <td>{{account_info.money_act}}万元</td>
+                                            <td>
+                                            <i style="color:red;">{{add_rate}}%</i>
+                                            <div class="progress">
+                                    	
+                                            <div style="width: {{add_rate}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>花费</td>
+                                            <td>{{account_info.money_cost}}元</td>
+                                            <td>
+                                            <i style="color:red;">{{cost_rate}}%</i>
+                                            <div class="progress">
+                                    	
+                                            <div style="width: {{cost_rate}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                                        </section>
+                                    </div>
+                                    <div class="tab-pane" id="profile">
+                                    	<section class="boxpadding">
+                                            <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">各项经费使用</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>预算(万元)</th>
+                                                    <th>花费(万元)</th>
+                                                    <th>比例</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in account_kind%}
+                                                {% ifequal row.buff -1 %}
+                                                {%else%}
+                                                <tr>
+                                                    <td><a href="/responsible_pro_show_kind?id={{row.payname}}&pid={{row.proid}}">{{row.payname}}</a></td>
+                                                    <td>{{row.money_sum}}</td>
+                                                    <td>{{row.money_cost}}</td>
+                                                    <td>
+                                                    <i style="color:red;">{{row.buff}}%</i>
+                                                    <div class="progress">
+                                    	
+                                            <div style="width: {{row.buff}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{row.buff}}" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                                </tr>
+                                                {% endifequal %}
+                                            {% endfor %}
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+                                        </section>
+                                    </div>
+                                    <div class="tab-pane" id="messages">
+                                    	<section class="boxpadding">
+                                        	<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">经费流水显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <div class="table-box">
+                                    	<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+                                        <table class="display table" id="example">
+                                        
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>时间</th>
+                                                    <th>凭单号</th>
+                                                    <th>经费种类</th>
+                                                    <th>名称</th>
+                                                    <th>金额</th>
+                                                    <th>经办人</th>
+                                                    <th>备注</th>
+                                                    <th>是否修改</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in result %}
+                                                <tr class="gradeX">
+                                                    <td>{{row.proid}}</td>
+                                                    <td>{{row.time}}</td>
+                                                    <td>{{row.bill_id}}</td>
+                                                    <td>{{row.paykind}}</td>
+                                                    <td>{{row.name}}</td>
+                                                    <td>{{row.money}}</td>
+                                                    <td>{{row.transactor}}</td>
+                                                    <td>{{row.note}}</td>
+                                                    {% if row.change %}
+                                                    <td>是</td>
+                                                    {% else %}
+                                                    <td>否</td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+
+                                        <script>
+                                        	var asInitVals = new Array();			
+											$(document).ready(function() {
+												var oTable = $('#example').dataTable( {
+													"oLanguage": {
+														"sSearch": "Search all columns:"
+													}
+												} );
+												
+												$("tfoot input").keyup( function () {
+													/* Filter on the column (the index) of this element */
+													oTable.fnFilter( this.value, $("tfoot input").index(this) );
+												} );
+												
+												
+												
+												/*
+												 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+												 * the footer
+												 */
+												$("tfoot input").each( function (i) {
+													asInitVals[i] = this.value;
+												} );
+												
+												$("tfoot input").focus( function () {
+													if ( this.className == "search_init" )
+													{
+														this.className = "";
+														this.value = "";
+													}
+												} );
+												
+												$("tfoot input").blur( function (i) {
+													if ( this.value == "" )
+													{
+														this.className = "search_init";
+														this.value = asInitVals[$("tfoot input").index(this)];
+													}
+												} );
+											} );
+
+                                        </script>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                                        </section>
+                                    </div>
+</div>
+</div>
+</div>
+{% endblock %}

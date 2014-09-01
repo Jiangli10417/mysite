@@ -1,0 +1,107 @@
+{% extends "mbase.html" %}
+{% block content %}
+
+
+<script>
+
+function edit(value)
+{
+
+    var n = value
+
+ $.ajax({
+        type:"GET",
+        url:"/kindconedit_add_edit/",
+        data:{
+        kind:n,
+        },
+        dataType: "json",
+        success:function(data){
+            $("#sub").show();
+            $("#content").show();
+            
+            for(var i=0;i<data.length;i++ )
+            {
+                s = s + data[i].fields.name + ",";
+            }
+            document.getElementById("content").value=s;
+           // var html='操作成功';
+           // $("#checkmsg").html(html);
+           //alert("数据录入成功");
+           //document.getElementById("money").value="";
+           //document.getElementById("note").value="";
+           //document.getElementById("name").value="";
+           //var ipts = document.getElementsByTagName("INPUT");
+           //for( var i = 0; i < ipts.length; i++ )
+           //{
+             //   if( ipts[i].type == "text" )
+               // {
+                 //ipts[i].value = "";
+                //}
+          // }
+        }
+    });
+}
+
+ function add(value)
+ {
+    var a="请输入经费种类名称"
+    var b="<input type="text" name="namecon" id = "namecon">"
+    document.getElementById("name").innerHTML(a);
+    document.getElementById("nameco").innerHTML(a);
+ }
+
+function subin()
+{
+    var name="";
+    var content="";
+    name = document.getElementById('name').value;
+    content = document.getElementById('name').value
+        $.ajax({
+        type:"GET",
+        url:"/kindconedit_add_input/",
+        data:{
+        name:name,
+        content:content,
+        },
+        dataType: "json",
+        success:function(json){
+            if name==""
+            {
+                alert("数据录入成功");
+            }
+            else
+            {
+            alert("数据录入成功");
+            var insertText="<input type="button" name="kindconname" onclick= "edit(this.value)" value=" + data[0].fields.name +">"
+            document.getElementById("inn").innerHTML(insertText);
+
+            }
+
+        }
+        });
+    }
+    
+}
+</script>
+
+<section>
+{% for row in kindcon %}
+<p><input type="button" name="kindconname" onclick= "edit(this.value)"value="{{row.name}}" ></p>
+{% endfor %}
+</section>
+<div id="inn" name ="inn"></div>
+
+
+<input type="button" name="addnew" id = "addnew" onclick = "add(this.value)" value = "增加"><br />
+
+<input type="hidden" id = "editname" name = "editname" >
+<div id = "name" name="name"></div><br />
+
+<div id = "nameco" name = "nameco"></div><br />
+
+<p>输入经费类别细目时,每项以逗号结尾（否则视为非法）</p>
+<input type="text" name="content" id = "content" >
+<button id="sub" name="sub" onclick="subin()">提交</button>
+
+{% endblock %}

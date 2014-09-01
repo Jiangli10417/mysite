@@ -1,0 +1,25 @@
+{% extends "rbase.html" %}
+{% block content %}
+
+ <div class="col-xs-12">
+                            <div class="sec-box">
+
+                                <header>
+                                    <h2 class="heading">欢迎进入负责人系统，请阅读操作须知</h2>
+                                    <h2 class="heading">{{error}}</h2>
+                                </header>
+                                <div class="contents boxpadding">
+
+                                    <section>
+                                        <p class="redtext">本界面负责项目经费分析查看，不提供数据录入功能</p>
+                                        <p class="redhighlight">经费流水查看：根据输入条件查询资金流水</p>
+                                        <p class="greentext">项目经费查看：显示项目经费概况，项目到期提醒，项目各项经费使用情况</p>
+                                        <p class="orangetext">中心整体费用使用：显示中心所有项目经费的使用</p>
+                                        <p class="orangetext">项目结题：显示中心所有项目经费的使用</p>
+                                        <p class="orangetext">年度总结：显示中心所有项目经费的使用</p>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+{% endblock %}

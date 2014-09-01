@@ -1,0 +1,211 @@
+{% extends "mbase.html" %}
+{% block content %}
+
+<script>
+$(document).ready(function(){
+    $("#add1").bind('click',function(){
+        var a1 = $("#new").val();
+
+        if(!a1)
+        {
+            $("#error").html("不能为空");
+            return false;
+        }
+
+    });
+});
+</script>
+
+<script>
+
+$(document).ready(function(){
+  $("tr#tempname").click(function(){
+    var name1;
+    name1 = $(this).attr("tempname");
+
+    alert(name1);
+    //选中某类别后，显示该类别对应的参数 ajax，Json返回
+    $.ajax({
+        type:"GET",
+        url:"/tempedit_showcontent/",
+        data:{
+            name:name1,
+        },
+        dataType: "json",
+        success:function(data){
+            var s="";
+            
+            for(var i=0;i<data.length;i++ )
+            {
+                s=s + data[i] + ",";
+            }
+
+            document.getElementById("addname").value=name1;
+            document.getElementById("showcontent").value=s;
+            $("#showname").html(name1);
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+
+
+<script>
+
+$(document).ready(function(){
+  $("input#add2").click(function(){
+    var content="";
+    var i;
+    var name = document.getElementById("addname").value;
+    
+    var row=document.getElementsByName("kind_name");
+    for(i=0;i<row.length;i++)
+    {
+         if(row[i].checked)
+         {
+         content = content+row[i].value+","
+         
+         }
+    }
+    if (!name)
+    {
+            $("#error").html("非法");
+            return false;
+    }
+    if (!content)
+    {
+            $("#error").html("请选择");
+            return false;
+    }
+    $.ajax({
+        type:"GET",
+        url:"/tempedit_add_edit/",
+        data:{
+            name:name,
+            content:content,
+        },
+        dataType: "json",
+        success:function(data){
+            alert("数据录入成功");
+            
+            document.getElementById("showcontent").value="";
+            document.getElementById("addname").value="";
+            for(i=0;i<row.length;i++)
+            {
+                row[i].checked=false;
+                
+            }
+
+            
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading">经费模版显示</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                             <form action="/tempedit_del/" method="post">
+                                            {% for row in tempn %}
+                                                <tr id="tempname" tempname="{{ row.kindname }}">
+                                                    <td><input type="radio" name="prodel_select" id ="prodel_select"  value="{{row.kindname}}">{{row.kindname}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <tr>
+                                            <td class="col-md-4">
+                                            <input type = "submit" id="del" name = "del" value="删除" class="btn btn-warning"></td>
+                                            </form>
+                                            </tr>
+                                            <form action="/tempedit_add/" method="post">
+                                            <tr>
+                                             <td class="col-md-4"><input type = "text" id = "new" name = "new"></td>
+                                            </tr>
+                                             <tr>
+                                            <td class="col-md-4"><input type = "submit" id="add1" name = "add1" value="增加" class="btn btn-warning" ></td>
+                                             </tr>
+                                             </form>
+                                            </tbody>
+                                            
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" >模版内容显示，编辑</h2>
+                                    <i style="color:green;" id = "showname" name = "showname"></i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>模版内容，每项以逗号隔开</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><textarea id = "showcontent" name = "showcontent"></textarea></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>以下为所有经费种类，如需要编辑请勾选后提交</td>
+                                                </tr>
+                                            <form id = "editform">
+                                            {% for row in kindn %}
+                                            <tr>
+                                            <td><input type="checkbox" name="kind_name"  value="{{row.name}}">{{row.name}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            </form>
+                                            <tr>
+                                             <td class="col-md-4">
+                                           
+                                            <input type = "hidden" id="addname" name = "addname">
+                                            <input type = "button" id="add2" name = "add2" value="提交" class="btn btn-warning">
+                                            
+                                            </form>
+                                            </td>
+                                            </tr>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        
+                        </div>
+                        </div>
+                        </div>
+
+{% endblock %}

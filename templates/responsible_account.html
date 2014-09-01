@@ -1,0 +1,247 @@
+{% extends "rbase.html" %}
+{% block extracss %}
+<link href="../static/css/style.css" rel="stylesheet" media="screen" />
+<link href="../static/css/bootstrap.css" rel="stylesheet" media="screen" />
+
+{% endblock %}
+
+{% block extrascript %}
+
+
+<script>
+$(document).ready(function(){
+$("#starttime").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+$(document).ready(function(){
+$("#endtime").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<script>
+$(document).ready(function(){
+  $("select#proid").click(function(){
+    var proid="";
+    var item="";
+    proid = $(this).val();
+
+    $.ajax({
+        type:"GET",
+        url:"/billprocontent_show/",
+        data:{
+            proid:proid,
+        },
+        dataType: "json",
+        success:function(data){
+            //先清空，再显示
+            $("#showcontent").empty();
+            item = '<input type="checkbox" name="propaykind" id = "propaykind" value = "全部"> 全部；';
+            $("#showcontent").append(item);
+            for(var i=0;i<data.length;i++ )
+            {
+                item = '<input type="checkbox" name="propaykind" id = "propaykind" value = "'+data[i]+'">'+data[i]+';';
+                $("#showcontent").append(item);
+            }
+//value = "+'data[i]'"
+        }
+    });
+    return false;
+    });
+});
+</script>
+<script>
+
+$(document).ready(function(){
+  $("input#query").click(function(){
+
+    $("#error").html("");
+    var check=0;
+    var reg =/^([1-2]\d{3})[\/|\-](0?[1-9]|10|11|12)[\/|\-]([1-2]?[0-9]|0[1-9]|30|31)$/;
+    if (document.getElementById("time").checked)
+    {   check++;
+        var a="";
+        var b="";
+        a = $("#starttime").val();
+        b = $("#endtime").val()
+        if(!a|| !reg.test(a))
+        {
+                $("#error").html("时间错误，请检查");
+                return false;
+        }
+        if(!b|| !reg.test(b))
+        {
+               $("#error").html("时间错误，请检查");
+               return false;
+        }
+    }
+    if (document.getElementById("money_ref").checked)
+    {
+    check++;
+        var numcheck = new RegExp("^[0-9]*$");
+        var mon = "";
+        mon = $("#money").val()
+        if(!mon|| !numcheck.test(mon))
+        {
+               $("#error").html("金额错误，请检查");
+               return false;
+        }
+    }
+    if (document.getElementById("pid").checked)
+    {
+        check++;
+    }
+   if (check == 0)
+   {
+   $("#error").html("请选择查询条件");
+               return false;
+   }
+});
+});
+
+</script>
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                     <div class="col-xs-3">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">综合查询（可多选）</h2>
+                                    
+                                </header>
+                                <div class="contents">
+                                <form action="/responsible_account_show/" method="post">
+                                <input type="checkbox" name="time" id = "time" value = "time">按时间查询<br />
+                                    <td class="col-md-4">开始时间<input type="text" id="starttime" name="starttime"></td><br />
+                                             
+                                    <td class="col-md-4">结束时间<input type="text" id="endtime" name="endtime"></td>
+                                    <br />
+                                    <br />
+                                    <input type="checkbox" name="pid" id = "pid" value = "pid">按项目查询<br />
+                                    <td>
+                                    <select id="proid" name="proid" >
+                                    <option value=""></option>
+                                    <option value="全部">全部</option>
+                                    {% for row in account_content %}
+                                    <option value="{{row.project_id}}" >{{row.project_id}}</option>
+                                    {% endfor %}
+                                    </select>
+                                    </td> <br />
+                                   
+                                    <td><i id = "showcontent" name = "showcontent"> </i></td>
+                                                                       <br />
+                                    <br />
+                                    <input type="checkbox" name="money_ref" id = "money_ref" value = "money">按金额(整数)查询<br />
+                                    <td>请输入金额<input type = "text" id = "money" name ="money">元，以上</td> <br />
+                                    <input type="submit" id = "query" name = "query" value="查询" class="btn btn-peimary style3">
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">经费流水显示</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+                                    <div class="table-box">
+                                    	<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+                                        {% if show %}
+                                        <table class="display table" id="example">
+                                        
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>时间</th>
+                                                    <th>凭单号</th>
+                                                    <th>经费种类</th>
+                                                    <th>名称</th>
+                                                    <th>金额</th>
+                                                    <th>经办人</th>
+                                                    <th>备注</th>
+                                                    <th>是否修改</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in result %}
+                                                <tr class="gradeX">
+                                                    <td>{{row.proid}}</td>
+                                                    <td>{{row.time}}</td>
+                                                    <td>{{row.bill_id}}</td>
+                                                    <td>{{row.paykind}}</td>
+                                                    <td>{{row.name}}</td>
+                                                    <td>{{row.money}}</td>
+                                                    <td>{{row.transactor}}</td>
+                                                    <td>{{row.note}}</td>
+                                                    {% if row.change %}
+                                                    <td>是</td>
+                                                    {% else %}
+                                                    <td>否</td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+                                        {% endif %}
+                                        <script>
+                                        	var asInitVals = new Array();			
+											$(document).ready(function() {
+												var oTable = $('#example').dataTable( {
+													"oLanguage": {
+														"sSearch": "Search all columns:"
+													}
+												} );
+												
+												$("tfoot input").keyup( function () {
+													/* Filter on the column (the index) of this element */
+													oTable.fnFilter( this.value, $("tfoot input").index(this) );
+												} );
+												
+												
+												
+												/*
+												 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+												 * the footer
+												 */
+												$("tfoot input").each( function (i) {
+													asInitVals[i] = this.value;
+												} );
+												
+												$("tfoot input").focus( function () {
+													if ( this.className == "search_init" )
+													{
+														this.className = "";
+														this.value = "";
+													}
+												} );
+												
+												$("tfoot input").blur( function (i) {
+													if ( this.value == "" )
+													{
+														this.className = "search_init";
+														this.value = asInitVals[$("tfoot input").index(this)];
+													}
+												} );
+											} );
+
+                                        </script>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        </div>
+                        </div>
+                        </div>
+                        
+{% endblock %}

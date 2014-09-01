@@ -1,0 +1,52 @@
+{% extends "basic.html" %}
+{% block content %}
+                          <div class="col-xs-12">
+                            <div class="sec-box">
+                                <a class="closethis">Close</a>
+                                <header>
+                                    <h2 class="heading">Condensed Table</h2>
+                                </header>
+                                <td class="col-md-4">选择项目号</td>
+                                        <td class="col-md-8">
+                                              <select class="form-control" id="proid" name="proid" >
+                                              {% for pro in project %}
+                                                  <option>{{ pro.pid }}</option>
+                                              {% endfor %}  
+                                              </select>
+                                       </td>
+                                <div class="contents">
+                                    <a class="togglethis">Toggle</a>
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>费用种类</th>
+                                                    <th>预算经费</th>
+                                                    <th>实到经费</th>
+                                                    <th>本次到帐经费</th>
+                                                    <th>到帐经费来源</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id = "proshow" name = "proshow">
+                                            
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{moneykind.moneyac}}</td>
+                                                    <td><input type="text" class="form-control" id={{moneykind.name}} name={{moneykind.name}} ></td>
+                                                    <td>
+                                                        <select class="form-control" id="moneysourse" name="moneysourse">
+                                                           <option>国家下拨</option>
+                                                           <option>省级下拨</option>
+                                                           <option>院校下拨</option>
+                                                           <option>资金自筹</option>
+                                                        </select>
+                                                     </td>
+                                                </tr>
+                                                                                  
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

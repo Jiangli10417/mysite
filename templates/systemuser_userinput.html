@@ -1,0 +1,172 @@
+{% extends "sbase.html" %}
+{% block content %}
+<script type="text/javascript" src="../static/js/jquery-ui-1.10.4.js"></script>
+
+<script>
+$(document).ready(function(){
+$("#birthday").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+</script>
+
+<script>
+
+$(document).ready(function(){
+  $("input#sub").click(function(){
+  $("#error").html("");
+    var uid=$("#uid").val();
+    var uname=$("#uname").val();
+    var room=$("#room").val();
+    var sex=$("#sex").val();
+    var birthday=$("#birthday").val();
+    var mail=$("#mail").val();
+    var phone=$("#phone").val();
+    var permission=$("#permission").val();
+    var password=$("#password").val();
+    
+    var numcheck = new RegExp("^[0-9]*$");
+    var timecheck =/^([1-2]\d{3})[\/|\-](0?[1-9]|10|11|12)[\/|\-]([1-2]?[0-9]|0[1-9]|30|31)$/;
+    var mailcheck  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    
+    if(!uid || !numcheck.test(uid))
+    {
+        $("#error").html("请输入正确编号");
+        return false;
+    }
+    
+    if(!uname)
+    {
+        $("#error").html("请输入姓名");
+        return false;
+    }
+    if(!room)
+    {
+        $("#error").html("请输入房间号");
+        return false;
+    }
+    if(!sex)
+    {
+        $("#error").html("请输入性别");
+        return false;
+    }
+    if(!birthday || !timecheck.test(birthday))
+    {
+        $("#error").html("请输入正确生日");
+        return false;
+    }
+    if(!mail || !mailcheck.test(mail))
+    {
+        $("#error").html("请输入正确邮箱");
+        return false;
+    }
+    if(!phone || !numcheck.test(phone))
+    {
+        $("#error").html("请输入正确邮箱");
+        return false;
+    }
+    if(!permission)
+    {
+        $("#error").html("请输入权限");
+        return false;
+    }
+    if(!password)
+    {
+        $("#error").html("请输入密码");
+        return false;
+    }
+    });
+});
+
+</script>
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                    <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">项目管理平台人员录入</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form action="/systemuser_userinput_input/" method="post">
+                                                <tr>
+                                                    <td>编号</td>
+                                                    <td><input type = "text" id = "uid" name = "uid"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>姓名</td>
+                                                    <td><input type = "text" id = "uname" name = "uname"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>房间</td>
+                                                    <td><input type = "text" id = "room" name = "room"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>性别</td>
+                                                    <td><select  id="sex" name="sex" >
+                                                    
+                                                    <option value="男" >男</option>
+                                                    <option value="女" >女</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>生日</td>
+                                                    <td><input type = "text" id = "birthday" name = "birthday"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>邮箱</td>
+                                                    <td><input type = "text" id = "mail" name = "mail"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>手机</td>
+                                                    <td><input type = "text" id = "phone" name = "phone"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>固话（选填）</td>
+                                                    <td><input type = "text" id = "tel" name = "tel" value = ""></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>权限</td>
+                                                    <td><select  id="permission" name="permission" >
+                                                    
+                                                    <option value="财务" >财务</option>
+                                                    <option value="负责人" >负责人</option>
+                                                    <option value="管理员" >管理员</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>密码</td>
+                                                    <td><input type = "text" id = "password" name = "password" ></td>
+                                                </tr>
+                                                <tr>
+                                                <td></td>
+                                                <td><input type = "submit" id = "sub" name = "sub" value="确定" class="btn btn-warning" ></td>
+                                                </tr>
+                                                </form>
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    
+                    
+                    
+                    
+                </div>
+                </div>
+                </div>
+
+{% endblock %}

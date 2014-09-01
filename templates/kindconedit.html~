@@ -1,0 +1,181 @@
+{% extends "mbase.html" %}
+{% block content %}
+<script>
+$(document).ready(function(){
+    $("#add1").bind('click',function(){
+        var a1 = $("#new").val();
+
+        if(!a1)
+        {
+            $("#error").html("不能为空");
+            return false;
+        }
+
+    });
+});
+</script>
+
+<script>
+
+$(document).ready(function(){
+  $("tr#kindname").click(function(){
+    var name1;
+    name1 = $(this).attr("kindname");
+    alert(name1);
+    //选中某类别后，显示该类别对应的参数 ajax，Json返回
+    $.ajax({
+        type:"GET",
+        url:"/kindconedit_showcontent/",
+        data:{
+            name:name1,
+        },
+        dataType: "json",
+        success:function(data){
+            var s="";
+            
+            for(var i=0;i<data.length;i++ )
+            {
+                s=s + data[i] + ",";
+            }
+            $("#showname").html(name1);
+            document.getElementById("addname").value=name1;
+            document.getElementById("showcontent").value=s;
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+<script>
+
+$(document).ready(function(){
+  $("input#add2").click(function(){
+  
+  
+    var content = $("#showcontent").val();
+    if(!content)
+        {
+            $("#error").html("不能为空");
+            return false;
+        }
+    if (content.charAt(content.length - 1)!=",")
+    {
+        $("#error").html("最后一位必须为引文逗号");
+        return false;
+    }
+    var name = document.getElementById("addname").value;
+    alert(content);
+    $.ajax({
+        type:"GET",
+        url:"/kindconedit_add_edit/",
+        data:{
+            name:name,
+            content:content,
+        },
+        dataType: "json",
+        success:function(data){
+            alert("数据录入成功");
+            document.getElementById("showcontent").value="";
+            document.getElementById("addname").value="";
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading"> 经费种类名称</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                           
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                             <form action="/kindconedit_del/" method="post">
+                                            {% for row in kindn %}
+                                                <tr id="kindname" kindname="{{ row.name }}">
+                                                <td><input type="radio" name="kinddel_select" id ="kinddel_select"  value="{{row.name}}"><a>{{row.name}}</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            <tr>
+                                             <td class="col-md-4">
+                                             <input type = "submit" id="del" name = "del" value="删除" class="btn btn-warning"></td>
+                                             </tr>
+                                             </form>
+                                            <form action="/kindconedit_add/" method="post">
+                                            <tr>
+                                             <td class="col-md-4"><input type = "text" id = "new" name = "new"></td>
+                                            </tr>
+                                             <tr>
+                                            <td class="col-md-4"><input type = "submit" id="add1" name = "add1" value="增加" class="btn btn-warning" ></td>
+                                             </tr>
+                                             </form>
+                                            </tbody>
+                                            
+
+                                        </table>
+                                    </section>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" >种类细目显示</h2>
+                                    <i style="color:green;" id = "showname" name = "showname"></i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>每项以英文逗号结尾，否则非法</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><textarea id = "showcontent" name = "showcontent"></textarea></td>
+                                                </tr>
+                                            <tr>
+                                             <td class="col-md-4">
+                                           
+                                            <input type = "hidden" id="addname" name = "addname">
+                                            <input type = "button" id="add2" name = "add2" value="确定" class="btn btn-warning">
+                                            
+                                           
+                                            </td>
+                                            </tr>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        
+                        </div>
+                        </div>
+                        </div>
+
+{% endblock %}

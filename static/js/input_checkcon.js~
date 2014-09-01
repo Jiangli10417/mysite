@@ -1,0 +1,50 @@
+$(document).ready(function(){
+    $("#continue").bind('click',function(){
+        var time = $("#time").val();
+        var name = $("#name").val();
+        var money = $("#money").val();
+        var num = $("#num").val();
+
+        var pnum = $("#pnum").val();    
+        var reg=/^[1-9]{1}\d*(\.\d{1,2})?$/;
+        if(!time)
+        {
+            $("#timemsg").html("时间不能为空！");
+            return false;
+        }
+        if(!name)
+        {
+            $("#namemsg").html("请填写名称");
+            return false;
+        }
+        if(!money)
+        {
+            $("#moneymsg").html("请填写金额");
+            return false;
+        }
+        if(!reg.test(money))
+        {
+            $("#moneymsg").html("金额格式错误");
+            return false;
+        }
+        
+        if(!isNaN(num))
+        {
+            $("#nummsg").html("必须为数字")
+            return false;
+        }
+        if(num > 1000)
+        {
+            $("#nummsg").html("购买数量超过规定限额")
+            return false;
+        }
+        if(!pnum || !isNaN(num))
+        {
+            $("#pnum").html("票据号错误");
+            return false;
+        }
+        return true;
+        
+    });
+});
+

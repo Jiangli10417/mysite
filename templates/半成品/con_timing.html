@@ -1,0 +1,13 @@
+{% extends "basic.html" %}
+{% endblock %}
+
+<form action="/conclsion/con_f_show" method="post">
+<select class="form-control" id="acckind" name="acckind" >
+{% for p in pro %}
+<option value="{{p.pid}}">{{p.pid}}</option>
+{% endfor %}
+</select>
+
+<input type="submit" class="btn btn-warning style3" value="确定" id="kind" name="kind">
+
+{% block content %}

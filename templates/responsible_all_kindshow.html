@@ -1,0 +1,152 @@
+{% extends "rbase.html" %}
+{% block content %}
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+
+
+
+
+                        
+      <div class="col-xs-12">
+                            <div class="tabs-section">
+                                <ul class="nav nav-tabs" id="myTab">
+                                    <li class="active"><a href="tabs.html#home" data-toggle="tab">{{kind}}类项目经费概况</a></li>
+                                    <li><a href="tabs.html#profile" data-toggle="tab">各经费类别概况显示</a></li>
+                                    <li><a href="tabs.html#messages" data-toggle="tab">所有项目显示</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="home">
+                                    	<section class="boxpadding">
+                                        	<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">{{kind}}类项目经费概况</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                    <th>比例</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                                <tr>
+                                                    <td>所有经费</td>
+                                                    <td>{{sum_kind}}万元(比例与中心全部费用比)</td>
+                                                    <td>
+                                                    <i style="color:red;">{{sum_kind_rate}}%</i><div class="progress">
+                                    	
+                                            <div style="width: {{sum_kind_rate}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>到账经费</td>
+                                                    <td>{{act_kind}}万元(与本类别费用比)</td>
+                                                    <td><i style="color:red;">{{act_kind_rate}}%</i><div class="progress">
+                                    	
+                                            <div style="width: {{act_kind_rate}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>花费经费</td>
+                                                    <td>{{cost_kind}}万元</td>
+                                                    <td><i style="color:red;">{{cost_kind_rate}}%</i><div class="progress">
+                                    	
+                                            <div style="width: {{cost_kind_rate}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                                </tr>
+                                               
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                                        </section>
+                                    </div>
+                                    <div class="tab-pane" id="profile">
+                                    	<section class="boxpadding">
+                                           
+                         <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">各经费类别概况显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            <tr>
+                                                    <th>名称</th>
+                                                    <th>金额（万元）</th>
+                                                    <th>比例</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in kind_obj %}
+                                                <tr>
+                                                    <td>{{row.payname}}(预算比)</td>
+                                                    <td>{{row.buff_four}}</td>
+                                                    <td>
+                                                    <i style="color:red;">{{row.buff_two}}%</i><div class="progress">
+                                    	
+                                            <div style="width: {{row.buff_two}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{row.payname}}(花费比)</td>
+                                                    <td>{{row.buff_three}}</td>
+                                                    <td><i style="color:red;">{{row.buff_one}}%</i><div class="progress">
+                                    	
+                                            <div style="width: {{row.buff_one}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success"></div></div>
+                                            </td>
+                                                </tr>
+                                            {% endfor %}
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                                        </section>
+                                    </div>
+                                    <div class="tab-pane" id="messages">
+                                    	<section class="boxpadding">
+                                        	                        <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">所有项目显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in proid_obj %}
+                                                <tr>
+                                                    <td><a href="/responsible_pro_show?id={{row.pid}}">{{row.pid}}</a></td>
+                                                </tr>
+                                                
+                                            {% endfor %}
+                                               
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                                        </section>
+                                    </div>                    
+    
+                                        </div>
+                </div>
+                </div>
+
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends "basic.html" %}
+{% block extracss %}
+<link href="../static/css/style.css" rel="stylesheet" media="screen" />
+<link href="../static/css/bootstrap.css" rel="stylesheet" media="screen" />
+<link href="../static/css/jquery-ui.css" rel="stylesheet" media="screen" />
+{% endblock %}
+{% block extrascript %}
+<!--<script type="text/javascript" src="../static/js/check.js"></script>-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui-1.10.4.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="../static/js/input_check.js"></script>
+<script type="text/javascript" src="../static/js/input_checkcon.js"></script>
+<script>
+$(document).ready(function(){
+  $("button#continue").click(function(){
+    var accid = $("input#projectnum").val();
+    var ckind = $("select#costkind").val();
+    var time = $("input#time").val();
+    var name = $("input#name").val();
+    var money = $("input#money").val();
+    var person = $("select#person").val();
+    var pnum = $("input#pnum").val();
+    var note = $("input#note").val();
+    var r = new RegExp("^[0-9]*$");
+    var re = "^[0-9]+[\.][0-9]{0,3}$";
+    var reg = new RegExp(re); 
+    if(!money || !reg.test(money))
+    {
+        $("#moneymsg").html("金额输入错误");
+        return false;
+    }
+    if(!pnum || !r.test(pnum))
+    {
+        $("#pnummsg").html("凭单号输入错误");
+        return false;
+    }
+    if(!time)
+    {
+        $("#timemsg").html("时间不能为空");
+        return false;
+    }
+    if(!name)
+    {
+        $("#namemsg").html("名称不能为空");
+        return false;
+    }
+    if(parseFloat(money)>1000000)
+    {
+        $("#moneymsg").html("单项金额过高");
+        return false;
+    }
+    //check the value
+  //  if(!assetType){
+   //     $("#checkmsg").html("类型名称不能为空");
+     //   return false;
+       
+    $.ajax({
+        type:"GET",
+        url:"/account/input_continue",
+        data:{
+          accid:accid,
+          cokind:ckind,
+          time:time,
+          name:name,
+          money:money,
+          person:person,
+          pnum:pnum,
+          note:note,
+        },
+        dataType: "json",
+        success:function(msg){
+           // var html='操作成功';
+           // $("#checkmsg").html(html);
+           alert("数据录入成功");
+           document.getElementById("money").value="";
+           document.getElementById("note").value="";
+           document.getElementById("name").value="";
+           //var ipts = document.getElementsByTagName("INPUT");
+           //for( var i = 0; i < ipts.length; i++ )
+           //{
+             //   if( ipts[i].type == "text" )
+               // {
+                 //ipts[i].value = "";
+                //}
+          // }
+           
+        }
+    });
+   // return false;
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+$("#time").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+</script>
+{% endblock %}
+
+<script>
+$(document).ready(function(){
+    $("#finish").bind('click',function(){
+        var a1 = $("#money").val();
+        var a2 = $("#pnum").val();
+        var a3 = $("#time").val();
+        var a4 = $("#name").val();
+
+        var re = "^[0-9]+[\.][0-9]{0,3}$";
+        var reg = new RegExp(re); 
+        if(!a1 || !reg.test(a1))
+        {
+            $("#moneymsg").html("金额输入错误");
+            return false;
+        }
+        if(!a2 || !isNaN(a2))
+        {
+            $("#pnummsg").html("凭单号输入错误");
+            return false;
+        }
+        if(!a3)
+        {
+            $("#timemsg").html("时间不能为空");
+            return false;
+        }
+        if(!a4)
+        {
+            $("#namemsg").html("名称不能为空");
+            return false;
+        }
+        if(parseFloat(a1)>1000000)
+        {
+            $("#moneymsg").html("单项金额过高");
+            return false;
+        }
+    });
+});
+</script>
+
+{% block content %}
+
+            <!-- Content Section Start -->
+            <div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading">经费支出票据录入</h2>
+                                </header>
+                                <div class="contents">                                                                   
+                                    <div class="table-box">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-4">描述</th>
+                                                    <th class="col-md-4">内容(除备注外都为必填)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form action="/account/input_finish" method="post">
+                                            {% csrf_token %}
+                                              <input type="hidden" id= "projectnum" name="projectnum" value="{{pronum}}"/> 
+                                              <tr>
+                                                    <td class="col-md-4">凭单号</td>
+                                                    <td class="col-md-8">
+                                                    <div class="input-group">
+                                                    <i id="pnummsg" style="color:red;"></i>
+                                                    <input type="text"  class="form-control" id="pnum" name="pnum">
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                               <tr>
+                                                    <td class="col-md-4">项目号</td>
+                                                    <td class="col-md-8">
+                                                     <div class="input-group">
+                                                    <i id="promsg" style="color:red;">{{project}}</i>
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">经办人</td>
+                                                    <td class="col-md-8">
+                                                     <div class="input-group">
+                                                    <i id="personmsg" style="color:red;"></i>
+                                                    <select class="form-control" id="person" name="person" >
+                                                    {% for u in user %}
+                                                            <option value="{{u.uname}}({{u.uid}})">{{u.uname}}({{u.uid}})</option>
+                                                    {% endfor %}
+                                                    </select>
+                                                    </div>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">费用种类种类</td>
+                                                    <td class="col-md-8">
+                                                    <div class="input-group">
+                                                    {% ifequal kind '863' %}
+                                                        <select class="form-control" id="costkind" name="costkind" >
+                                                            <option value="设备费">设备费</option>
+                                                            <option value="材料费">材料费</option>
+                                                            <option value="测试费">测试费</option>
+                                                            <option value="燃料费">燃料费</option>
+                                                            <option value="差旅费">差旅费</option>
+                                                            <option value="会议费">会议费</option>
+                                                            <option value="国际合作交流费">国际合作交流费</option>
+                                                            <option value="出版文献等">出版文献等</option>
+                                                            <option value="劳务费">劳务费</option>
+                                                            <option value="其他费用">其他费用</option>
+                                                        </select>
+                                                     {%endifequal%}
+                                                     {% ifequal kind '自然基金' %}
+                                                        <select class="form-control" id="costkind" name="costkind" >
+                                                            <option value="资料费">资料费</option>
+                                                            <option value="数据采集费">数据采集费</option>
+                                                            <option value="设备费">设备费</option>
+                                                            <option value="专家咨询费">专家咨询费费</option>
+                                                            <option value="差旅费">差旅费</option>
+                                                            <option value="会议费">会议费</option>
+                                                            <option value="国际合作交流费">国际合作交流费</option>
+                                                            <option value="印刷费">印刷费</option>
+                                                            <option value="劳务费">劳务费</option>
+                                                            <option value="其他费用">其他费用</option>
+                                                        </select>
+                                                     {%endifequal%}
+                                                       </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">时间</td>
+                                                    <td class="col-md-8">
+                                                    <i id="timemsg" style="color:red;"></i>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" id="time" name="time" >
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">名称</td>
+                                                    <td class="col-md-8">
+                                                     <div class="input-group">
+                                                    <i id="namemsg" style="color:red;"></i>
+                                                    <input type="text"  class="form-control" id="name" name="name"></td>
+                                                    </div>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">金额</td>
+                                                    <td class="col-md-8">
+                                                    <i id="moneymsg" style="color:red;"></i>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" id="money" name="money">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">备注</td>
+                                                    <td class="col-md-8">
+                                                     <div class="input-group">
+                                                    <input type="text" class="form-control" id="note" name="note"></td>
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                                 <td class="col-md-4"></td>
+                                    
+                                                 
+                                                 <td class="col-md-8">
+                                                 <input type="submit" id="finish" name="finish" value="提交完成" class="btn btn-peimary style3">
+                                                 </form>
+                                                 <button id="continue" name="continue" class="btn btn-peimary style3">提交继续</button>
+                                                 </td>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row End -->
+                </div>
+            </div>
+            <!-- Content Section End -->
+{% endblock %}
+

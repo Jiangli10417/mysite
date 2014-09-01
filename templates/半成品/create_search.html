@@ -1,0 +1,21 @@
+{% extends "basic.html" %}
+{% block content %}
+              <form action="/account/create_proshow" method="post">
+              {% csrf_token %} 
+                        
+                                <header>
+                                    <h2 class="heading">创建项目帐号，请输入要创建的项目</h2>
+                                </header>
+                                <div class="contents boxpadding">
+                                    
+                                    <i style="color:red;">{{error}}</i>
+                                       <!-- Search Section Start -->
+                                       <div class="search-box">
+                                            <input type="text" id= "projectid" name="projectid" placeholder="Search Anything" />
+                                            <input type="submit" value="go" />
+                                       </div>
+                                        <!-- Search Section End -->
+                                </div>
+                                                  
+               </form>
+{% endblock %}

@@ -1,0 +1,303 @@
+{% extends "fbase.html" %}
+
+{% block extracss %}
+<link href="../static/css/style.css" rel="stylesheet" media="screen" />
+<link href="../static/css/bootstrap.css" rel="stylesheet" media="screen" />
+<link href="../static/css/jquery-ui.css" rel="stylesheet" media="screen" />
+{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript" src="../static/js/jquery-ui-1.10.4.js"></script>
+
+<script>
+$(document).ready(function(){
+$("#time").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+</script>
+
+<script>
+
+$(document).ready(function(){
+  $("select#payname").click(function(){
+    var kind="";
+    var item="";
+    kind = $(this).val();
+    $.ajax({
+        type:"GET",
+        url:"/accountcreate_kindcontent_show/",
+        data:{
+            kind:kind,
+        },
+        dataType: "json",
+        success:function(data){
+            //先清空，再显示
+            $("#showcontent").empty();
+            for(var i=0;i<data.length;i++ )
+            {
+                item = '<input type="checkbox" name="check" value = "'+data[i]+'">'+data[i]+';    数量 <input type="text" style="width:30px;height:18px;font-size:1px;" id="'+data[i]+'" name = "'+data[i]+'" >  <br />';
+                $("#showcontent").append(item);
+            }
+//value = "+'data[i]'"
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+
+
+<script>
+
+$(document).ready(function(){
+  $("input#add1").click(function(){
+     $("#error").html("");
+    // 
+    var i=0;
+    var namecontent="";
+    var time="";
+    var money="";
+    var note="";
+    var pid="";
+    var billid="";
+    var paykind="";
+    var numcontent="";
+    var numtemid="";
+    var numtemcon=""
+    var row=document.getElementsByName("check");
+    var numcheck = new RegExp("^[0-9]*$");
+    for(i=0;i<row.length;i++)
+    {
+         if(row[i].checked)
+         {
+         numtemid = row[i].value;
+         numtemcon = document.getElementById(numtemid).value;
+         if(!numcheck.test(numtemcon)||!numtemcon)
+        {
+            $("#error").html("数字不正确");
+            return false;
+         }
+         
+         numcontent = numcontent + numtemcon + "," ;
+         namecontent = namecontent+row[i].value+",";
+         
+         }
+    }
+    var tem1 = $("#extraname").val();
+    if (tem1)
+    {
+        namecontent = namecontent + tem1 + "," ;
+    }
+
+    billid=$("#billid").val();
+    time=$("#time").val();
+    money=$("#money").val();
+    note=$("#note").val();
+    pid=$("#objid").val();
+    paykind=$("#payname").val();
+    var datecheck =/^([1-2]\d{3})[\/|\-](0?[1-9]|10|11|12)[\/|\-]([1-2]?[0-9]|0[1-9]|30|31)$/;
+    if(!pid)
+    {
+            $("#error").html("项目号空");
+            return false;
+    }
+    if(!time||!datecheck.test(time))
+    {
+            $("#error").html("输入时间");
+            return false;
+    }
+    if(!paykind)
+    {
+            $("#error").html("选择经费种类");
+            return false;
+    }
+    if(!namecontent)
+    {
+            $("#error").html("选择花费名称");
+            return false;
+    }
+    var re = "^[0-9]+[\.][0-9]{0,3}$";
+    var reg = new RegExp(re);
+    if(!money || !reg.test(money))
+    {
+         $("#error").html("金额输入错误");
+         return false;
+    }
+    alert(namecontent);
+    $.ajax({
+        type:"GET",
+        url:"/accountinput_create_input/",
+        data:{
+            time:time,
+            namecontent:namecontent,
+            money:money,
+            note:note,
+            pid:pid,
+            billid:billid,
+            paykind:paykind,
+            numcontent:numcontent,
+        },
+        dataType: "json",
+        success:function(data){
+           alert("数据录入成功");
+           document.getElementById("money").value="";
+           document.getElementById("note").value="";
+           document.getElementById("extraname").value="";
+           
+           
+            $("#showcontent").html("");
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading">项目账户显示</h2>
+                                  
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form action="/accountinput_create_select/" method="post">
+                                                
+                                                <tr>
+                                                <td>
+                                                <select class="form-control" id="accid" name="accid" >
+                                                {% for row in proshow %}
+                                                <option value="{{row.project_id}}">{{row.project_id}}</option>
+                                                    {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                                
+                                                 <tr>
+                                            <td class="col-md-4"><input type = "submit" id="create" name = "create" value="选择" class="btn btn-warning" ></td>
+                                            </form>
+                                            </tbody>
+                                            
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" >账户显示</h2>
+                                </header>
+                                <div class="contents">
+                                    
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>项目号</td>
+                                                    <td>{{proobj.pid}}</td>
+                                                    <input type = "hidden" id = "objid" name = "objid" value = {{proobj.pid}}>
+                                                </tr>
+                                                <tr>
+                                                    <td>项目种类</td>
+                                                    <td>{{proobj.prokind}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>项目负责人</td>
+                                                    <td>{{proobj.pManager}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>资金卡号</td>
+                                                    <td>{{acid.account_id}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>凭单内容</td><td>金额请精确到小数点一位，否则为非法</td>
+                                                </tr>
+                                                <form id = "account_create">
+
+                                                
+                                                
+                                                {% if proobj.pid %}
+                                                <tr>
+                                                <td>凭单号</td>
+                                                    <td><input type = "text" id="billid" name="billid"></td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <td>金额</td>
+                                                    <td><input type = "text" id="money" name="money">元</td>
+                                                </tr>
+                                                <tr>
+                                                <td>时间</td>
+                                                    <td><input type = "text" id="time" name="time" ></td>
+                                                </tr>
+                                                
+                                                
+                                                <tr>
+                                                <td>花费种类</td>
+                                             
+                                                <td>
+                                                <select class="form-control" id="payname" name="payname" >
+                                                <option></option>
+                                                {% for row in kind %}
+                                                <option value="{{row.payname}}">{{row.payname}}</option>
+                                                {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <td>种类内容，可多选</td>
+                                                <td id = "showcontent" name = "showcontent">  </td>
+                                                </tr>
+                                                <tr>
+                                                <td>种类内容补充（如无可选项，填写）</td>
+                                                <td> <input type = "text" id = "extraname" name = "extraname" > </td>
+                                                </tr>
+                                                <tr>
+                                                <td>备注</td>
+                                                <td> <input type = "text" id="note" name="note" > </td>
+                                                </tr>
+                                            <tr>
+                                             <td class="col-md-4">  <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                    
+                                            <td><input type = "button" id="add1" name = "add1" value="提交" class="btn btn-warning"></td>
+                                            </td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                           
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "basic.html" %}
+{% block content %}
+         
+
+                        <div class="col-xs-8">
+                            <div class="stat-box colorone">
+                                <i class="author">&nbsp;</i>
+                                <h4>{{promang}}</h4>
+                                <h1>以下为项目号信息，无误后请确定</h1>
+                            </div>
+                        </div>
+                       <div class="col-xs-12">
+                            <div class="sec-box">                              
+                                <header>
+                                    <h2 class="heading">项目详细信息</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table">
+                                            
+                                            <tbody>
+                                                <tr class="danger">
+                                                    <td>项目号</td>
+                                                    <td id="proid" name = "proid">{{projectid}}</a></td>
+                                                    
+                                                </tr>
+                                                <tr class="danger">
+                                                    <td>项目名称</td>
+                                                    <td>{{proname}}</td>
+                                                </tr>
+                                                <tr class="danger">
+                                                    <td>项目内容</td>
+                                                    <td>{{procon}}</td>
+                                                 </tr>
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                        
+                        <a href="/account/create?id={{projectid}}" class="btn btn-primary">确定</a>
+                        </div>
+          
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends "fbase.html" %}
+{% block content %}
+
+<script>
+
+$(document).ready(function(){
+  $("input#create_sql").click(function(){
+    var c="";
+    var a = 0;
+    var b = 0;
+    var d = 0;
+    var account = "";
+    var kindname = "";
+    var sum1 = "";
+    var firstm="";
+    var proid = "";
+    var obj=document.getElementsByName("temp");
+    var arrt;
+    var accid = "";
+    
+    var re = "^[0-9]+[\.][0-9]{0,3}$";
+    var reg = new RegExp(re);
+     
+    for(i=0;i<obj.length;i++)
+    {
+        arrt=obj[i].getAttribute("id");
+        kindname = kindname + arrt + ",";
+        c = document.getElementById(arrt).value;
+        if(!c || !reg.test(c))
+        {
+             $("#error").html("经费种类金额输入错误");
+             return false;
+        }
+        a = a + parseFloat(c);
+        account = account + document.getElementById(arrt).value +"," ;
+    }
+    
+    sum1 = document.getElementById("all").value;
+    if(!sum1 || !reg.test(sum1))
+    {
+         $("#error").html("总金额输入错误");
+         return false;
+    }
+    b=parseFloat(sum1);
+    if(a != b)
+    {   
+             var ss = '分项金额共计'+c+'万元,与总金额不匹配，请查实再输入'
+             $("#error").html();
+             return false;
+    }
+    proid = document.getElementById("objid").value;
+    
+    accid =  document.getElementById("acc_id").value;
+    firstm = document.getElementById("first").value;
+    if(!firstm || !reg.test(firstm))
+    {
+         $("#error").html("第一次到账输入错误");
+         return false;
+    }
+    if (parseFloat(firstm)>b)
+    {
+          $("#error").html("到账金额超限额");
+          return false;
+    }
+    if(!proid)
+    {
+         $("#error").html("项目号空");
+         return false;
+    }
+    if(!proid)
+    {
+         $("#error").html("项目号空");
+         return false;
+    }
+    
+    $.ajax({
+        type:"GET",
+        url:"/accountcreate_create/",
+        data:{
+            proid:proid,
+            sum1:sum1,
+            kindname:kindname,
+            account:account,
+            firstm:firstm,
+            accid:accid,
+        },
+        dataType: "json",
+        success:function(data){
+            alert("数据录入成功");
+        }
+    });
+    return false;
+    });
+});
+
+</script>
+
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading">项目账户创建,编辑</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form action="/accountcreate/" method="post">
+                                                <tr>
+                                                    <td>创建账户</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <td>
+                                                <select class="form-control" id="accid" name="accid" >
+                                                {% for row in pro_uncreate %}
+                                                <option value="{{row.pid}}">{{row.pid}}</option>
+                                                    {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                                
+                                                 <tr>
+                                            <td class="col-md-4"><input type = "submit" id="create" name = "create" value="创建" class="btn btn-warning" ></td>
+                                            </form>
+                                            
+                                            <form action="/accountedit/" method="post">
+                                             </tr>
+                                                <tr>
+                                                    <td>修改账户</td>
+                                                </tr>
+                                                   <tr>
+                                                   <td>
+                                                <select class="form-control" id="proid" name="proid" >
+                                                {% for row in pro_create %}
+                                                <option value="{{row.project_id}}">{{row.project_id}}</option>
+                                                {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                             <tr>
+                                            <td class="col-md-4"><input type = "submit" id="edit" name = "edit" value="编辑" class="btn btn-warning" ></td>
+                                             </tr>
+                                             </form>
+                                             
+                                            </tbody>
+                                            
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" >账户显示</h2>
+                                </header>
+                                <div class="contents">
+                                    
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>项目号</td>
+                                                    <td>{{proobj.pid}}</td>
+                                                    <input type = "hidden" id = "objid" name = "objid" value = {{proobj.pid}}>
+                                                </tr>
+                                                <tr>
+                                                    <td>项目种类</td>
+                                                    <td>{{proobj.prokind}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>项目负责人</td>
+                                                    <td>{{proobj.pManager}}</td>
+                                                </tr>
+                                                 <form id = "edit">
+                                                  {% if proobj.pid %}
+                                                <tr>
+                                                <td>请输入资金卡号</td>
+                                                <td><input name = "acc_id" id = "acc_id" type = "text" value = "{{obj1.account_id}}" ></td>
+                                                <tr>
+                                                    <td>请输入各项费用</td><td>至少精确到小数点一位，否则为非法</td>
+                                                </tr>
+                                               {% endif %}
+                                                {% for row in temp_uncreate %}
+                                                <tr>
+                                                <td>{{row.payname}}</td>
+                                             
+                                                <td><input name = "temp" id = "{{row.payname}}" type = "text" >万元</td>
+                                                </tr>
+                                                
+                                                {% endfor %}
+                                                {% for row in temp_create %}
+                                                <tr>
+                                                <td>{{row.payname}}</td>
+                                                <td><input name = "temp" id = "{{row.payname}}" type = "text" value = "{{row.money_sum}}" >万元</td>
+                                                </tr>
+                                                
+                                                {% endfor %}
+                                                </form>
+                                                {% if proobj.pid %}
+                                                <tr>
+                                                <td>总金额</td>
+                                                    <td><input type = "text" id="all" name="all"  value = "{{money}}">万元</td>
+                                                </tr>
+                                                <tr>
+                                                <td>第一次到账金额</td>
+                                                    <td><input type = "text" id="first" name="first"  value = "{{moneyfirst}}">万元</td>
+                                                </tr>
+                                                {% endif %}
+                                                
+                                            <tr>
+                                             <td class="col-md-4">
+                    
+                                            <td><input type = "button" id="create_sql" name = "create_sql" value="提交" class="btn btn-warning"></td>
+
+                                            </td>
+                                            </tr>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

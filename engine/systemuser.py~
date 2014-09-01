@@ -1,0 +1,184 @@
+#encoding=utf-8
+from django.http import HttpResponse,HttpResponseRedirect
+from django.template import Template, Context
+from django.template import RequestContext
+from django.shortcuts  import render_to_response
+from django.utils import simplejson
+from django.db.models import Q
+from models import Bill,Account,Project,User,Kindname,Protemplate,Kindcontent,Prokindaccount,Tempname,Accountadd_record,Billdevice_record,User_history
+import datetime
+import string
+
+
+def systemuser_userinput(request):
+    return render_to_response("systemuser_userinput.html",locals())
+
+def systemuser_userinput_input(request):
+    try:
+        uid = request.POST["uid"]
+        uname = request.POST["uname"]
+        room = request.POST["room"]
+        sex = request.POST["sex"]
+        birthday = request.POST["birthday"]
+        mail = request.POST["mail"]
+        phone = request.POST["phone"]
+        tel = request.POST["tel"]
+        permission = request.POST["permission"]
+        password = request.POST["password"]
+        obj = User(uid=uid,uname=uname,room=room,sex=sex,birthday=birthday,mail=mail,phone=phone,tel=tel,permission=permission,password=password,)
+        obj.save()
+        error='录入成功'
+        return render_to_response("systemuser_userinput.html",locals())
+    except:
+        error='失败'
+        return render_to_response("systemuser_userinput.html",locals())
+###############################################################################
+
+###############################################################################
+def systemuser_useredit(request):
+    user = User.objects.all()
+    return render_to_response("systemuser_useredit.html",locals())
+
+def systemuser_useredit_show(request):
+    user = User.objects.all()
+    uid = request.POST["uidshow"]
+    edit_obj = User.objects.get(uid = uid)
+    edit_obj.birthday=edit_obj.birthday.strftime('%Y-%m-%d')
+    editshow = True
+    return render_to_response("systemuser_useredit.html",locals())
+
+def systemuser_useredit_edit(request):
+    user = User.objects.all()
+    try:
+        user = User.objects.all()
+        uid = request.POST["uid"]
+        uname = request.POST["uname"]
+        room = request.POST["room"]
+        sex = request.POST["sex"]
+        birthday = request.POST["birthday"]
+        mail = request.POST["mail"]
+        phone = request.POST["phone"]
+        tel = request.POST["tel"]
+        permission = request.POST["permission"]
+        password = request.POST["password"]
+        obj = User.objects.get(uid=uid)
+        obj.uname=uname
+        obj.room=room
+        obj.sex=sex
+        obj.birthday=birthday
+        obj.mail=mail
+        obj.phone=phone
+        obj.permission=permission
+        obj.password=password
+        obj.save()
+        error='修改成功'
+        return render_to_response("systemuser_useredit.html",locals())
+    except:
+        error='失败'
+        return render_to_response("systemuser_useredit.html",locals())
+        
+#################################################################################
+
+#################################################################################
+
+def systemuser_userchange(request):
+    user_in = User.objects.all()
+    user_out = User_history.objects.all()
+    return render_to_response("systemuser_userchange.html",locals())
+    
+def systemuser_userchange_del(request):
+    user_in = User.objects.all()
+    user_out = User_history.objects.all()
+    try:
+        delshow = True
+        uid = request.POST["uidshow"]
+        del_obj = User.objects.get(uid = uid)
+        return render_to_response("systemuser_userchange.html",locals())
+    except:
+        error='失败'
+        return render_to_response("systemuser_userchange.html",locals())
+    
+def systemuser_userchange_del_sub(request):
+    try:
+        uid = request.POST["uid"]
+        obj = User.objects.get(uid=uid)
+        uname=obj.uname
+        room=obj.room
+        sex=obj.sex
+        birthday=obj.birthday
+        mail=obj.mail
+        phone=obj.phone
+        permission=obj.permission
+        password= obj.password
+        tel= obj.tel
+        obj.delete()
+        u_history = User_history(uid=uid,uname=uname,room=room,sex=sex,birthday=birthday,mail=mail,phone=phone,tel=tel,permission=permission,password=password,)
+        u_history.save()
+        error='注销成功'
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        return render_to_response("systemuser_userchange.html",locals())
+    except:
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        error='失败'
+        return render_to_response("systemuser_userchange.html",locals())
+    
+def systemuser_userchange_ret(request):
+    try:
+        retshow = True
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        uid = request.POST["uidhis"]
+        ret_obj = User_history.objects.get(uid = uid)
+        return render_to_response("systemuser_userchange.html",locals())
+    except:
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        error='失败'
+        return render_to_response("systemuser_userchange.html",locals())
+        
+def systemuser_userchange_ret_sub(request):
+    try:
+        uid = request.POST["uid"]
+        obj = User_history.objects.get(uid=uid)
+        uname=obj.uname
+        room=obj.room
+        sex=obj.sex
+        birthday=obj.birthday
+        mail=obj.mail
+        phone=obj.phone
+        tel= obj.tel
+        permission=obj.permission
+        password= obj.password
+        obj.delete()
+        u = User(uid=uid,uname=uname,room=room,sex=sex,birthday=birthday,mail=mail,phone=phone,tel=tel,permission=permission,password=password,)
+        u.save()
+        error='还原成功'
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        return render_to_response("systemuser_userchange.html",locals())
+    except:
+        user_in = User.objects.all()
+        user_out = User_history.objects.all()
+        error='失败'
+        return render_to_response("systemuser_userchange.html",locals())
+        
+##########################################################################################
+
+###########################################################################################
+def systemuser_pwdreset(request):
+    return render_to_response("systemuser_pwdreset.html",locals())
+    
+def systemuser_pwdreset_sub(request):
+    try:
+        pwd = request.POST["pwd"]
+        user = User.objects.all()
+        for i in user:
+            i.password = pwd
+            i.save()
+        error='重置成功'
+        return render_to_response("systemuser_pwdreset.html",locals())
+    except:
+        error='失败'
+        return render_to_response("systemuser_pwdreset.html",locals())

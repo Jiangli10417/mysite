@@ -1,0 +1,24 @@
+{% extends "mbase.html" %}
+{% block content %}
+
+ <div class="col-xs-12">
+                            <div class="sec-box">
+
+                                <header>
+                                    <h2 class="heading">欢迎进入经费管理员系统，请阅读操作须知</h2>
+                                    <h2 class="heading">{{error}}</h2>
+                                </header>
+                                <div class="contents boxpadding">
+
+                                    <section>
+                                        <p class="redtext">本界面负责对经费种类及其内容编辑，流水撤回，经费模版编辑。因为涉及部分数据库操作请谨慎操作</p>
+                                        <p class="redhighlight">项目模版编辑：项目模版生成后可以增删内容，但如果有项目开始运用此模版，会造成后续经费查询时，系统分析有误</p>
+                                        <p class="greentext">经费种类细目编辑：此项必须实时更新</p>
+                                        <p class="orangetext">项目经费追加：输入追加的经费，</p>
+                
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+{% endblock %}

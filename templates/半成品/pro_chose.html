@@ -1,0 +1,11 @@
+{% extends "basic.html" %}
+{% block content %}
+<form action="/acc_spend/spendall_show" method="post">
+<select class="form-control" id="acckind" name="acckind" >
+<option value="863">863</option>
+<option value="自然基金">自然基金</option>
+</select>
+
+<input type="submit" class="btn btn-warning style3" value="确定" id="kind" name="kind">
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "basic.html" %}
+{% block content %}
+
+<script>
+$(document).ready(function(){
+    $("#submit").bind('click',function(){
+        var a1 = $("#moneyall").val();
+        var a2 = $("#device").val();
+        var a3 = $("#material").val();
+        var a4 = $("#test").val();
+        var a5 = $("#trip").val();
+        var a6 = $("#fuel").val();
+        var a7 = $("#meeting").val();
+        var a8 = $("#coperation").val();
+        var a9 = $("#publish").val();
+        var a0 = $("#labor").val();
+        var a10 = $("#other").val();
+        var b = $("#moneyac").val();
+        var re = "^[0-9]+[\.][0-9]{0,3}$";
+        var reg = new RegExp(re); 
+        if(!a1 || !reg.test(a1))
+        {
+            $("#moneyallmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a2 || !reg.test(a2))
+        {
+            $("#devicemsg").html("金额输入错误");
+            return false;
+        }
+        if(!a3 || !reg.test(a3))
+        {
+            $("#materialmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a4 || !reg.test(a4))
+        {
+            $("#testmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a5 || !reg.test(a5))
+        {
+            $("#triplmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a6 || !reg.test(a6))
+        {
+            $("#fuelmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a7 || !reg.test(a7))
+        {
+            $("#meetingmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a8 || !reg.test(a8))
+        {
+            $("#coperationmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a9 || !reg.test(a9))
+        {
+            $("#publishmsg").html("金额输入错误");
+            return false;
+        }
+        if(!a0 || !reg.test(a0))
+        {
+            $("#labormsg").html("金额输入错误");
+            return false;
+        }
+        if(!a10 || !reg.test(a10))
+        {
+            $("#othermsg").html("金额输入错误");
+            return false;
+        }
+        
+        if(parseFloat(a1)!=(parseFloat(a2)+parseFloat(a3)+parseFloat(a4)+parseFloat(a5)+parseFloat(a6)+parseFloat(a7)+parseFloat(a8)+parseFloat(a9)+parseFloat(a10)+parseFloat(a0)))
+        {
+            $("#moneyallmsg").html("总金额不匹配");
+            return false;
+        }
+        if(!b || !reg.test(b))
+        {
+            $("#moneyacmsg").html("金额输入错误");
+            return false;
+        }
+        if(parseFloat(a1)<=parseFloat(b))
+        {
+            $("#moneyacmsg").html("金额输入超出限额");
+            return false;
+        }
+    });
+});
+</script>
+ <div class="col-xs-12">
+                            <div class="sec-box">
+                                
+                                <header>
+                                    <h2 class="heading">{{pro}}项目预算经费录入表（863模版）(金额精确到小数点后一位)</h2>
+                                </header>
+                                <div class="contents">
+                                
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>                                                   
+                                                    <th>费用种类</th>
+                                                    <th>预算经费</th>
+                                                    <th>总经费<i id="moneyallmsg" style="color:red;"></i></th>
+                                                    <th>现到帐经费<i id="moneyacmsg" style="color:red;"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <form action="/account/success" method="post">
+                                            <input type="hidden" id= "proid" name="proid" value="{{pro}}"/>
+                                            <tbody>
+                                                <tr>
+                                                    <td>设备费<i id="devicemsg" style="color:red;"></i></td>
+                                                
+                                                    <td> <input type="text" id= "device" name="device"  /></td>
+                                                    <td> <input type="text" id= "moneyall" name="moneyall"  /></td>
+                                                    <td> <input type="text" id= "moneyac" name="moneyac"  /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>材料费<i id="materialmsg" style="color:red;"></i></td>
+                                                    
+                                                    <td><input type="text" id= "material" name="material"  /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>测试化验费<i id="testmsg" style="color:red;"></i></td>
+                                 
+                                                    <td><input type="text" id= "test" name="test"/></td>                          
+                                                </tr>
+                                                <tr>
+                                                    <td>燃料动力费<i id="fuelmsg" style="color:red;"></i></td>
+                                                    
+                                                    
+                                                    <td><input type="text" id= "fuel" name="fuel"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>差旅费 <i id="tripmsg" style="color:red;"></i></td>
+                                                   
+                                                    <td><input type="text" id= "trip" name="trip"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>会议费<i id="meetingmsg" style="color:red;"></i></td>
+                                                    
+                                                    <td><input type="text" id= "meeting" name="meeting"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>国际合作交流费 <i id="coperationmsg" style="color:red;"></i></td>
+                                                   
+                                                    <td><input type="text" id= "coperation" name="coperation"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>出版/文献/信息传播/知识产权事物费<i id="publishmsg" style="color:red;"></i></td>
+                                                    
+                                                    <td><input type="text" id= "publish" name="publish"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>劳务费  <i id="labormsg" style="color:red;"></i></td>
+                                                  
+                                                    <td><input type="text" id= "labor" name="labor"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>其它支出<i id="othermsg" style="color:red;"></i></td>
+                                                    
+                                                    <td><input type="text" id= "other" name="other"/></td>
+                                                </tr>
+                                                <td class="col-md-4"></td>
+                                                <td class="col-md-8"><input type="submit" id="submit" value="创建" class="btn btn-peimary style3">
+                                              </tbody>
+                                             </form>
+                                        </table>
+                                        
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}

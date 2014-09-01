@@ -1,0 +1,171 @@
+#!/usr/bin/python
+#-*- coding:utf-8 -*-
+
+from django.db import models
+import datetime
+from time import strftime,localtime
+
+class Bill(models.Model):                     #凭单表
+    time = models.DateField(u'时间')
+    name = models.CharField(u'名称',max_length=50)
+    money = models.FloatField (u'单价')
+    transactor = models.CharField(u'经办人',max_length=30) #经办人：外键
+    note = models.CharField(u'备注',max_length=50)
+    bill_id = models.CharField(u'凭单号',max_length=50)
+    paykind = models.CharField(u'支出种类',max_length=50)
+    proid = models.CharField(u'项目号',max_length=50)
+    change = models.BooleanField(u'是否修改',default=False)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        db_table = u'Bill'
+        
+class Billdevice_record(models.Model):
+    Bill_sqlid = models.IntegerField()
+    proid = models.CharField(u'项目号',max_length=50)
+    name= models.CharField(u'名称',max_length=30)
+    number=models.IntegerField(u'数量')
+    paykind = models.CharField(u'支出种类',max_length=50)
+    def __unicode__(self):
+        return self.proid
+    class Meta:
+        db_table = u'Billdevice_record'
+    
+class Billchange_record(models.Model):
+    transactor = models.CharField(u'操作人',max_length=30) #经办人：外键
+    billsql_id = models.IntegerField(u'bill表单中的id号')
+    time = models.DateTimeField(u'时间')
+    proid = models.CharField(u'项目号',max_length=50)
+    operation = models.CharField(u'操作行为',max_length=10)
+    def __unicode__(self):
+        return self.transactor
+    class Meta:
+        db_table = u'Billchange_record'
+
+class Account(models.Model):                  #账户表    
+    project_id = models.ForeignKey('Project',null= True,blank=True) #项目号：
+    account_id = models.CharField(u'资金卡号',max_length=15)
+    money_sum = models.FloatField ()
+    money_act = models.FloatField ()
+    money_cost = models.FloatField ()
+
+    class Meta:
+        db_table = u'Account'
+
+class Account_history(models.Model):
+    project_id = models.ForeignKey('Project',null= True,blank=True) #项目号：
+    account_id = models.CharField(u'资金卡号',max_length=15)
+    money_sum = models.FloatField ()
+    money_act = models.FloatField ()
+    money_cost = models.FloatField ()
+    class Meta:
+        db_table = u'Account_history'
+
+class Accountadd_record(models.Model):
+    project_id = models.ForeignKey('Project',null= True,blank=True) #项目号：外键
+    time = models.DateTimeField()
+    money_add = models.FloatField()
+    class Meta:
+        db_table = u'Accountadd_record'
+    
+class Kindname(models.Model):
+    name = models.CharField(u'经费种类名称',max_length=30)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        db_table = u'Kindname'
+
+class Protemplate(models.Model):
+    prokind = models.CharField(u'项目种类名称',max_length=30)
+    payname = models.CharField(u'经费种类名称',max_length=30)
+    buff_one = models.FloatField(null= True,blank=True)
+    buff_two = models.FloatField(null= True,blank=True)
+    buff_three = models.FloatField(null= True,blank=True)
+    buff_four = models.FloatField(null= True,blank=True)
+    def __unicode__(self):
+        return self.prokind
+    class Meta:
+        db_table = u'Protemplate'
+        
+class Kindcontent(models.Model):
+    name = models.CharField(u'经费种类名称',max_length=30)
+    content = models.CharField(u'经费种类明细',max_length=30)
+    number = models.IntegerField(null= True,blank=True)
+    buff = models.CharField(max_length=30,null= True,blank=True)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        db_table = u'Kindcontent'
+
+class Tempname(models.Model):
+    kindname = models.CharField(u'项目种类名称',max_length=30)
+    def __unicode__(self):
+        return self.kindname
+    class Meta:
+        db_table = u'Tempname'
+
+class Prokindaccount(models.Model):
+    proid = models.ForeignKey('Project',null= True,blank=True)
+    payname = models.CharField(u'经费种类名称',max_length=30)
+    money_sum = models.FloatField (u'经费预算')
+    money_cost = models.FloatField (u'经费花费')
+    buff = models.FloatField (u'计算处理结果存放')
+    def __unicode__(self):
+        return self.payname
+    class Meta:
+        db_table = u'Prokindaccount'
+    
+class Project(models.Model):                          #项目表
+    pid = models.CharField(u'项目号',max_length=50, primary_key=True)
+    pName = models.CharField(u'项目名称',max_length=20)
+    pManager = models.ForeignKey('User',null= True,blank=True)              #项目负责人：外键
+    pConntent = models.TextField(u'研究内容',max_length=300)
+    pStart = models.DateField(u'开题时间')
+    pEnd = models.DateField(u'结题时间')
+    introDoc = models.FileField(u'申请书',upload_to='static/uploads',null= True,blank=True)
+    userDemanDdoc = models.FileField(u'用户需求说明书',upload_to='static/uploads',null= True,blank=True)
+    testScheme = models.FileField(u'测试方案',upload_to='static/uploads',null= True,blank=True)  
+    iscreate=models.BooleanField(u'是否创建账户',default=False)
+    prokind=models.CharField(max_length=50,null=True)
+    def __unicode__(self):
+        return self.pid
+    class Meta:
+        db_table = u'Project'
+        
+    
+
+class User(models.Model):                             #用户信息表
+    uid = models.CharField(max_length=9,primary_key=True)
+    uname = models.CharField(max_length=20)                                                  #用户所在项目组：外键
+    tid = models.ForeignKey('Project',null= True,blank=True)
+    room = models.CharField(max_length=10)
+    sex = models.CharField(max_length=10)
+    birthday = models.DateField()
+    image = models.ImageField(upload_to="static/uploads",null= True,blank=True)
+    mail = models.EmailField(max_length=254)
+    phone = models.CharField(max_length=13)
+    tel = models.CharField(max_length=10)
+    permission = models.CharField(max_length=10)
+    password = models.CharField(max_length=20)
+    def __unicode__(self):
+        return self.uid
+    class Meta:
+        db_table = u'User'
+        
+class User_history(models.Model):                             #用户信息表
+    uid = models.CharField(max_length=9,primary_key=True)
+    uname = models.CharField(max_length=20)                                                  #用户所在项目组：外键
+    tid = models.ForeignKey('Project',null= True,blank=True)
+    room = models.CharField(max_length=10)
+    sex = models.CharField(max_length=10)
+    birthday = models.DateField()
+    image = models.ImageField(upload_to="static/uploads",null= True,blank=True)
+    mail = models.EmailField(max_length=254)
+    phone = models.CharField(max_length=13)
+    tel = models.CharField(max_length=10)
+    permission = models.CharField(max_length=10)
+    password = models.CharField(max_length=20)
+    def __unicode__(self):
+        return self.uid
+    class Meta:
+        db_table = u'User_history'

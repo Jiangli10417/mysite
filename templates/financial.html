@@ -1,0 +1,24 @@
+{% extends "fbase.html" %}
+{% block content %}
+
+ <div class="col-xs-12">
+                            <div class="sec-box">
+
+                                <header>
+                                    <h2 class="heading">欢迎进入经费财务系统，请阅读操作须知</h2>
+                                    <h2 class="heading">{{error}}</h2>
+                                </header>
+                                <div class="contents boxpadding">
+
+                                    <section>
+                                        <p class="redtext">本界面负责对项目账户操作，不提供项目经费分析显示</p>
+                                        <p class="redhighlight">创建账户：对尚未开始的项目，录入各项经费种类预算，以及第一次到账金额，在项目经费为使用之前可修改，一旦使用将不可修改</p>
+                                        <p class="greentext">经费流水录入：根据票据录入经费使用情况，如有操作错误，请进入管理员页面，输入自己密码进行修改</p>
+                                        <p class="orangetext">项目经费追加：输入要追加的项目和经费，只可以修改最新一次</p>
+                
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+{% endblock %}

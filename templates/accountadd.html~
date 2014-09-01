@@ -1,0 +1,179 @@
+{% extends "fbase.html" %}
+{% block content %}
+<script>
+$(document).ready(function(){
+    $("input#add_input").bind('click',function(){
+        var a1 = $("#addmoney").val();
+        var re = "^[0-9]+[\.][0-9]{0,3}$";
+        var reg = new RegExp(re);
+                    alert(reg.test(a1));
+        if(!a1||!reg.test(a1))
+
+        {
+            $("#error").html("金额格式错误");
+            return false;
+        }
+
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+    $("input#edit_input").bind('click',function(){
+        var a1 = $("#editmoney").val();
+        var re = "^[0-9]+[\.][0-9]{0,3}$";
+        var reg = new RegExp(re);
+        alert(reg.test(a1));
+        if(!a1||!reg.test(a1))
+        {
+            $("#error").html("金额格式错误");
+            return false;
+        }
+
+    });
+});
+</script>
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading">项目经费追加，修改</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <form action="/accountadd_add/" method="post">
+                                                <tr>
+                                                    <td>经费追加</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <td>
+                                                <select class="form-control" id="addname" name="addname" >
+                                                {% for row in account_add_edit %}
+                                                <option value="{{row.project_id}}">{{row.project_id}}</option>
+                                                {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                                
+                                                 <tr>
+                                            <td class="col-md-4"><input type = "submit" id="add" name = "add" value="经费追加" class="btn btn-warning" ></td>
+                                            </form>
+                                            
+                                            <form action="/accountadd_edit/" method="post">
+                                            </tr>
+                                                <tr>
+                                                    <td>追加经费修改</td>
+                                                </tr>
+                                                   <tr>
+                                                   <td>
+                                                <select class="form-control" id="editname" name="editname" >
+                                                {% for row in account_add_edit %}
+                                                <option value="{{row.project_id}}">{{row.project_id}}</option>
+                                                {% endfor %}
+                                                 </select>
+                                                 </td>
+                                                </tr>
+                                            <tr>
+                                            <td class="col-md-4"><input type = "submit" id="edit" name = "edit" value="经费追加修改" class="btn btn-warning" ></td>
+                                             </tr>
+                                             </form>
+                                             
+                                            </tbody>
+                                            
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" >{{account_obj.project_id}}账户资金追加显示</h2>
+                                    
+                                </header>
+                                <div class="contents">
+                                    
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                            {% if show %}
+                                                <tr>
+                                                    <th>资金卡号</th>
+                                                    <th>{{account_obj.account_id}}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>到账费用/总金额</th>
+                                                    <th>{{account_obj.money_act}}万元/{{account_obj.money_sum}}万元</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>时间</th>
+                                                    <th>追加金额</th>
+                                                </tr>
+                                                
+                                            {% endif %}
+                                            </thead>
+                                            <tbody>
+                                            
+                                            {% for row in record_obj %}
+                                                <tr>
+                                                    <td>{{row.time}}</td>
+                                                    <td>{{row.money_add}}万元</td>
+                                                </tr>
+                                            {% endfor %}
+                                            {% if add_add %}
+                                            <form action="/accountadd_add_input/" method="post">
+                                                <tr>
+                                                    <td>请输入追加金额（至少精确到小数点一位）</td>
+                                                    <td><input name = "addmoney" id = "addmoney" type = "text" >万元</td>
+                                                    <input type = "hidden" id = "objid" name = "objid" value = {{account_obj.project_id}}>
+                                                </tr>
+                                                <tr>
+                                             <td class="col-md-4">
+                    
+                                            <td><input type = "submit" id="add_input" name = "add_input" value="提交" class="btn btn-warning"></td>
+
+                                            </td>
+                                            </form>
+                                            {% endif %}
+                                            {% if add_edit %}
+                                            <form action="/accountadd_edit_input/" method="post">
+                                            <input type = "hidden" id = "objid" name = "objid" value = {{account_obj.project_id}}>
+                                                <tr>
+                                                    <td>请输入追后一次追加修改内容</td>
+                                                    <td><input name = "editmoney" id = "editmoney" type = "text" >元</td>
+                                                </tr>
+                                                <tr>
+                                                <td class="col-md-4">
+                                            <td><input type = "submit" id="edit_input" name = "edit_input" value="提交" class="btn btn-warning"></td>
+                                            </form>
+                                            {% endif %}
+                                            </td>
+                                            </tr>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

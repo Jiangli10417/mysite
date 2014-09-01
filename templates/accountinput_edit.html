@@ -1,0 +1,196 @@
+{% extends "mbase.html" %}
+{% block extracss %}
+<link href="../static/css/style.css" rel="stylesheet" media="screen" />
+<link href="../static/css/bootstrap.css" rel="stylesheet" media="screen" />
+
+{% endblock %}
+
+{% block extrascript %}
+
+<script>
+$(document).ready(function(){
+$("#starttime").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+$(document).ready(function(){
+$("#endtime").datepicker({ 
+     dateFormat: "yy'-'mm'-'dd"});
+});
+</script>
+{% endblock %}
+{% block content %}
+
+<script>
+
+$(document).ready(function(){
+  $("input#query").click(function(){
+    var a="";
+    var b="";
+    a = $("#starttime").val();
+    b = $("#endtime").val();
+    var reg =/^([1-2]\d{3})[\/|\-](0?[1-9]|10|11|12)[\/|\-]([1-2]?[0-9]|0[1-9]|30|31)$/;
+    if(!a|| !reg.test(a))
+    {
+            $("#error").html("时间错误，请检查");
+            return false;
+    }
+    if(!b|| !reg.test(b))
+    {
+            $("#error").html("时间错误，请检查");
+            return false;
+    }
+});
+});
+</script>
+<script>
+$(document).ready(function(){
+  $("input#edit").click(function(){
+    var a="";
+    a = $("input#edit").val();
+    document.getElementById("flag").value=a;
+});
+});
+
+</script>
+
+<script>
+$(document).ready(function(){
+  $("input#del").click(function(){
+    var a="";
+    a = $("input#del").val();
+    document.getElementById("flag").value=a;
+});
+});
+
+</script>
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                     <div class="col-xs-6">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">查询流水并选择修改项目</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+                                <form action="/accountinput_edit_show/" method="post">
+                                    <td >开始时间</td>
+                                    <td ><input type="text"  id="starttime" name="starttime"></td><br />
+                                    <td>结束时间</td>
+                                    <td><input type="text"  id="endtime" name="endtime"></td><br />
+                                    <td>选择项目号</td>
+                                    <td>
+                                    <select  id="proid" name="proid" >
+                                    <option value="全部">全部</option>
+                                    {% for row in accountedit %}
+                                    <option value="{{row.project_id}}">{{row.project_id}}</option>
+                                    {% endfor %}
+                                    </select>
+                                    </td><br />
+                                     <input type="submit" id = "query" name="query" value="查询" class="btn btn-peimary style3">
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">资金流水操作撤销</h2>
+                                </header>
+                                <div class="contents">
+                                    <div class="table-box">
+                                    	<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+                                    	{% if show %}
+                                    	<form action="/accountinput_edit_check/" method="post">
+                                        <table class="display table" id="example">
+                                            <thead>
+                                                <tr>
+                                                    <th>数据库ID号</th>
+                                                    <th>项目编号</th>
+                                                    <th>时间</th>
+                                                    <th>名称</th>
+                                                    <th>金额</th>
+                                                    <th>经办人</th>
+                                                    <th>凭单号</th>
+                                                    <th>经费种类</th>
+                                                    <th>备注</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in result %}
+                                                <tr class="gradeX">
+                                                    <td><input type="radio" name="bill_sql_id"  value="{{row.id}}">{{row.id}}</td>
+                                                    <td>{{row.proid}}</td>
+                                            
+                                                    <td>{{row.time}}</td>
+                                                    <td>{{row.name}}</td>
+                                                    <td>{{row.money}}</td>
+                                                    <td>{{row.transactor}}</td>
+                                                    <td>{{row.bill_id}}</td>
+                                                    <td>{{row.paykind}}</td>
+                                                    <td>{{row.note}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+                                        
+                                        <script>
+                                        	var asInitVals = new Array();			
+											$(document).ready(function() {
+												var oTable = $('#example').dataTable( {
+													"oLanguage": {
+														"sSearch": "Search all columns:"
+													}
+												} );
+												
+												$("tfoot input").keyup( function () {
+													/* Filter on the column (the index) of this element */
+													oTable.fnFilter( this.value, $("tfoot input").index(this) );
+												} );
+												
+												
+												
+												/*
+												 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+												 * the footer
+												 */
+												$("tfoot input").each( function (i) {
+													asInitVals[i] = this.value;
+												} );
+												
+												$("tfoot input").focus( function () {
+													if ( this.className == "search_init" )
+													{
+														this.className = "";
+														this.value = "";
+													}
+												} );
+												
+												$("tfoot input").blur( function (i) {
+													if ( this.value == "" )
+													{
+														this.className = "search_init";
+														this.value = asInitVals[$("tfoot input").index(this)];
+													}
+												} );
+											} );
+
+                                        </script>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            <input type = "hidden" id="flag" name = "flag" value="">
+                            </div>
+                             <input type = "submit" id="edit" name = "edit" value="更改" class="btn btn-warning">
+                             <input type = "submit" id="del" name = "del" value="删除" class="btn btn-warning">
+                             </form>
+                             {% endif %}
+                        </div>
+                    </div>
+                    <!-- Row End -->
+                </div>
+            </div>
+            {% endblock %}

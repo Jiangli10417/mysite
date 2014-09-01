@@ -1,0 +1,42 @@
+{% extends "basic.html" %}
+{% block content %}
+
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                
+                                <header>
+                                    <h2 class="heading">863项目经费概况</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>设备费</th>
+                                                    <th>材料费</th>
+                                                    <th>燃料费</th>
+                                                    <th>差旅费</th>
+                                                    <th>会议费</th>
+                                                    <th>国际合作交流费</th>
+                                                    <th>出版文献等</th>
+                                                    <th>劳务费</th>
+                                                    <th>其他费用</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in cost %}
+                                                <tr>
+                                                    <td>{{row.temp_id}}/{{e}}</td>
+                                                    <td>{{row.device_cost}}</td>
+                                                    <td>Ot</td>
+                                                    <td>@mdo</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+{% endblock %}

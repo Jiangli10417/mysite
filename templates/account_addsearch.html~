@@ -1,0 +1,24 @@
+{% extends "basic.html" %}
+{% block content %}
+              <form action="/account/account_add" method="post">
+                        <div class="col-xs-12">
+                            <div class="sec-box">
+                                <a class="closethis" href="">Close</a>
+                                <header>
+                                    <h2 class="heading">请输入项目号</h2>
+                                </header>
+                                <div class="contents boxpadding">
+                                    <a class="togglethis" href="">Toggle</a>
+                                    <i  style="color:red;">{{error}}</i>
+                                       <!-- Search Section Start -->
+                                       <div class="search-box">
+                                            <input type="text" id= "projectid" name="projectid" placeholder="Search Anything" />
+                                            <input type="submit" value="go" />
+                                       </div>
+                                        <!-- Search Section End -->
+                                </div>
+                            </div>
+                        </div>
+                        
+               </form>
+{% endblock %}

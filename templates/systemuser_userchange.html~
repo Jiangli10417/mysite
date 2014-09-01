@@ -1,0 +1,182 @@
+{% extends "sbase.html" %}
+{% block content %}
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                    <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">项目管理平台人员注销/还原</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                    <h2 class="heading">
+                                    <form action="/systemuser_userchange_del/" method="post">
+                                    <select  id="uidshow" name="uidshow" >
+                                    {% for row in user %}
+                                                    
+                                                    <option value="{{row.uid}}" >{{row.uid}}</option>
+                                    {% endfor %}
+                                                    </select>
+                                                    <input type = "submit" id = "del" name = "del" value="注销" class="btn btn-warning" >
+                                                    </h2>
+                                    
+                                    </form>
+                                    
+                                    <h2 class="heading">
+                                    <form action="/systemuser_userchange_ret/" method="post">
+                                    <select  id="uidhis" name="uidhis" >
+                                    {% for row in user %}
+                                                    
+                                                    <option value="{{row.uid}}" >{{row.uid}}</option>
+                                    {% endfor %}
+                                                    </select>
+                                                    <input type = "submit" id = "ret" name = "ret" value="还原" class="btn btn-warning" >
+                                                    </h2>
+                                    
+                                    </form>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if delshow %}
+                                            <form action="/systemuser_userchange_del/" method="post">
+                                                <tr>
+                                                    <td>编号</td>
+                                                    <td>{{edit_obj.uid}}</td>
+                                                    <input type = "hidden" id = "uid" name = "uid" value="{{edit_obj.uid}}">
+                                                </tr>
+                                                <tr>
+                                                    <td>姓名</td>
+                                                    <td><input type = "text" id = "uname" name = "uname" value="{{edit_obj.uname}}"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>房间</td>
+                                                    <td><input type = "text" id = "room" name = "room" value="{{edit_obj.room}}"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>性别</td>
+                                                    <td><select  id="sex" name="sex" value="{{edit_obj.sex}}">
+                                                    
+                                                    <option value="男" >男</option>
+                                                    <option value="女" >女</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>生日</td>
+                                                    <td><input type = "text" id = "birthday" name = "birthday" value="{{edit_obj.birthday}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>邮箱</td>
+                                                    <td><input type = "text" id = "mail" name = "mail" value="{{edit_obj.mail}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>手机</td>
+                                                    <td><input type = "text" id = "phone" name = "phone" value="{{edit_obj.phone}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>固话（选填）</td>
+                                                    <td><input type = "text" id = "tel" name = "tel" value="{{edit_obj.tel}}" ></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>权限/{{edit_obj.permission}}</td>
+                                                    <td><select  id="permission" name="permission"  >
+                                                    <option value="" ></option>
+                                                    <option value="财务" >财务</option>
+                                                    <option value="负责人" >负责人</option>
+                                                    <option value="管理员" >管理员</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>密码</td>
+                                                    <td><input type = "text" id = "password" name = "password" value="{{edit_obj.password}}"></td>
+                                                </tr>
+                                                <tr>
+                                                <td></td>
+                                                <td><input type = "submit" id = "sub" name = "sub" value="确定" class="btn btn-warning" ></td>
+                                                </tr>
+                                                </form>
+                                                {% endif %}
+                                                
+                                                
+                                                 {% if retshow %}
+                                            <form action="/systemuser_userchange_ret/" method="post">
+                                                <tr>
+                                                    <td>编号</td>
+                                                    <td>{{edit_obj.uid}}</td>
+                                                    <input type = "hidden" id = "uid" name = "uid" value="{{edit_obj.uid}}">
+                                                </tr>
+                                                <tr>
+                                                    <td>姓名</td>
+                                                    <td><input type = "text" id = "uname" name = "uname" value="{{edit_obj.uname}}"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>房间</td>
+                                                    <td><input type = "text" id = "room" name = "room" value="{{edit_obj.room}}"></td>
+                                                </tr>
+                                               <tr>
+                                                    <td>性别</td>
+                                                    <td><select  id="sex" name="sex" value="{{edit_obj.sex}}">
+                                                    
+                                                    <option value="男" >男</option>
+                                                    <option value="女" >女</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>生日</td>
+                                                    <td><input type = "text" id = "birthday" name = "birthday" value="{{edit_obj.birthday}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>邮箱</td>
+                                                    <td><input type = "text" id = "mail" name = "mail" value="{{edit_obj.mail}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>手机</td>
+                                                    <td><input type = "text" id = "phone" name = "phone" value="{{edit_obj.phone}}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>固话（选填）</td>
+                                                    <td><input type = "text" id = "tel" name = "tel" value="{{edit_obj.tel}}" ></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>权限/{{edit_obj.permission}}</td>
+                                                    <td><select  id="permission" name="permission"  >
+                                                    <option value="" ></option>
+                                                    <option value="财务" >财务</option>
+                                                    <option value="负责人" >负责人</option>
+                                                    <option value="管理员" >管理员</option>
+                                                    </select></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>密码</td>
+                                                    <td><input type = "text" id = "password" name = "password" value="{{edit_obj.password}}"></td>
+                                                </tr>
+                                                <tr>
+                                                <td></td>
+                                                <td><input type = "submit" id = "sub" name = "sub" value="确定" class="btn btn-warning" ></td>
+                                                </tr>
+                                                </form>
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    
+                    
+                    
+                    
+                </div>
+                </div>
+                </div>
+
+{% endblock %}

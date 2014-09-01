@@ -1,0 +1,97 @@
+{% extends "mbase.html" %}
+{% block content %}
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+<div class="col-xs-6">
+                            <div class="sec-box">
+                               
+                                <header>
+                                    <h2 class="heading" 修改内容</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                </header>
+                                <div class="contents">
+                                    
+                                    <section>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>数据库ID号</td>
+                                                    <td>{{bill_edit_show.id}}</td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td>项目号</td>
+                                                    <td>{{bill_edit_show.proid}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>资金卡号</td>
+                                                    <td>{{acid}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>经办人</td>
+                                                    <td>{{bill_edit_show.transactor}}</td>
+                                                </tr>
+                                                <tr>
+                                                <td>凭单号</td>
+                                                    <td>{{bill_edit_show.bill_id}}</td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                <td>金额</td>
+                                                    <td>{{bill_edit_show.money}}元</td>
+                                                </tr>
+                                                <tr>
+                                                <td>时间</td>
+                                                    <td>{{bill_edit_show.time}}</td>
+                                                </tr>
+                                                
+                                                
+                                                <tr>
+                                                <td>花费种类</td>
+                                                <td>{% for row in kindcontent %}
+                                                    名称:{{row.name}} 数量:{{row.number}}<br />
+                                                    {% endfor %}
+                                                     {% if name %}
+                                                    补充内容：{{name}}
+                                                    {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                <td>种类内容</td>
+                                                <td > {{bill_edit_show.name}} </td>
+                                                </tr>
+                                                <tr>
+                                                <td>备注</td>
+                                                <td> {{bill_edit_show.note}}</td>
+                                                </tr>
+                                                </tr>
+                                                 <form action="/accountinput_del_submit/" method = "POST">
+                                                <tr>
+                                                <td>密码</td>
+                                                <td> <input type = "password" id="pwd" name="pwd" value=""> </td>
+                                                </tr>
+                                           
+                                            <tr>
+                                            <td class="col-md-4">
+                                            <input type = "hidden" id = "bill_sqlid" name = "bill_sqlid" value = {{bill_edit_show.id}}>
+                                            <td><input type = "submit" value="提交" id="edit" name="edit" class="btn btn-warning"></td>
+                                            </td>
+                                            </tr>
+                                            </tbody>
+                                           </form>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

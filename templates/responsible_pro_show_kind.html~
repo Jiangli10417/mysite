@@ -1,0 +1,143 @@
+{% extends "rbase.html" %}
+{% block content %}
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                    
+
+
+<div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">项目号：{{proid}} /种类 ：{{kind}}</h2>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>名称</th>
+                                                    <th>金额（万元）</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>总预算</td>
+                                                    <td>{{moneyall}}</td>
+                                                </tr>
+                                               <tr>
+                                                    <td>{{kind}}预算</td>
+                                                    <td>{{kind_account.money_sum}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{kind}}花费</td>
+                                                    <td>{{kind_account.money_cost}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">经费流水显示</h2>
+                                </header>
+                                <div class="contents">
+                                    <div class="table-box">
+                                    	<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+                                        <table class="display table" id="example">
+                                        
+                                            <thead>
+                                                <tr>
+                                                    <th>项目号</th>
+                                                    <th>时间</th>
+                                                    <th>凭单号</th>
+                                                    <th>经费种类</th>
+                                                    <th>名称</th>
+                                                    <th>金额</th>
+                                                    <th>经办人</th>
+                                                    <th>备注</th>
+                                                    <th>是否修改</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in result %}
+                                                <tr class="gradeX">
+                                                    <td>{{row.proid}}</td>
+                                                    <td>{{row.time}}</td>
+                                                    <td>{{row.bill_id}}</td>
+                                                    <td>{{row.paykind}}</td>
+                                                    <td>{{row.name}}</td>
+                                                    <td>{{row.money}}</td>
+                                                    <td>{{row.transactor}}</td>
+                                                    <td>{{row.note}}</td>
+                                                    {% if row.change %}
+                                                    <td>是</td>
+                                                    {% else %}
+                                                    <td>否</td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+
+                                        <script>
+                                        	var asInitVals = new Array();			
+											$(document).ready(function() {
+												var oTable = $('#example').dataTable( {
+													"oLanguage": {
+														"sSearch": "Search all columns:"
+													}
+												} );
+												
+												$("tfoot input").keyup( function () {
+													/* Filter on the column (the index) of this element */
+													oTable.fnFilter( this.value, $("tfoot input").index(this) );
+												} );
+												
+												
+												
+												/*
+												 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+												 * the footer
+												 */
+												$("tfoot input").each( function (i) {
+													asInitVals[i] = this.value;
+												} );
+												
+												$("tfoot input").focus( function () {
+													if ( this.className == "search_init" )
+													{
+														this.className = "";
+														this.value = "";
+													}
+												} );
+												
+												$("tfoot input").blur( function (i) {
+													if ( this.value == "" )
+													{
+														this.className = "search_init";
+														this.value = asInitVals[$("tfoot input").index(this)];
+													}
+												} );
+											} );
+
+                                        </script>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+</div>
+</div>
+</div>
+
+{% endblock %}

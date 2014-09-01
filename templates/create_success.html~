@@ -1,0 +1,11 @@
+{% extends "basic.html" %}
+{% block content %}
+                        <div class="col-xs-2">
+                            <div class="stat-box colorseven">
+                                <i class="author">&nbsp;</i>
+                                <h4>{{accountid}}创建成功</h4>
+                                <h1>资金帐号为项目号</h1>
+                            </div>
+                        </div>
+
+{% endblock %}

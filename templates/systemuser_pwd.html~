@@ -1,0 +1,44 @@
+{% extends "sbase.html" %}
+{% block content %}
+
+<div class="content-section">
+                <div class="container-liquid">
+                    <div class="row">
+                    
+                    <div class="col-xs-12">
+                            <div class="sec-box">
+                                <header>
+                                    <h2 class="heading">请输入重置密码</h2>
+                                    <i style="color:red;" id = "error" name = "error">{{error}}</i>
+                                    <h2 class="heading">
+                                    <form action="/systemuser_pwdreset_sub/" method="post">
+                                    <input type = "text" id = "ped" name = "ped"  >
+                                                    <input type = "submit"  value="重置" class="btn btn-warning" >
+                                                    </h2>
+
+                                    </form>
+                                </header>
+                                <div class="contents">
+                                    <section>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            
+                                             
+                                            </tbody>
+                                        </table>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    
+                </div>
+                </div>
+                </div>
+
+{% endblock %}
